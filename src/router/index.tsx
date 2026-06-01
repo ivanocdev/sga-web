@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { lazy, Suspense, type ComponentType } from 'react'
 import MainLayout from '@/components/templates/MainLayout'
+import { ProtectedRoute, PublicRoute } from '@/components/templates/ProtectedRoute'
 
 // Carga diferida por ruta — cada página genera su propio chunk, reduciendo el bundle inicial
 const Login = lazy(() => import('@/pages/Login'))
@@ -24,22 +25,29 @@ function page(Page: ComponentType) {
 
 export const router = createBrowserRouter([
   {
-    path: '/login',
-    element: page(Login),
+    // solo accesible sin sesión — si ya hay sesión redirige a /
+    element: <PublicRoute />,
+    children: [{ path: '/login', element: page(Login) }],
   },
   {
-    path: '/',
-    element: <MainLayout />,
+    // todas las rutas de la app requieren sesión activa
+    element: <ProtectedRoute />,
     children: [
-      { index: true, element: page(Dashboard) },
-      { path: 'almacen', element: page(Almacen) },
-      { path: 'almacen/racks', element: page(Racks) },
-      { path: 'almacen/cajas/:productoId', element: page(CajasProducto) },
-      { path: 'ventas', element: page(Ventas) },
-      { path: 'ventas/:ventaId/productos', element: page(ProductosVenta) },
-      { path: 'usuarios', element: page(Usuarios) },
-      { path: 'categorias', element: page(Categorias) },
-      { path: 'configuracion', element: page(Configuracion) },
+      {
+        path: '/',
+        element: <MainLayout />,
+        children: [
+          { index: true, element: page(Dashboard) },
+          { path: 'almacen', element: page(Almacen) },
+          { path: 'almacen/racks', element: page(Racks) },
+          { path: 'almacen/cajas/:productoId', element: page(CajasProducto) },
+          { path: 'ventas', element: page(Ventas) },
+          { path: 'ventas/:ventaId/productos', element: page(ProductosVenta) },
+          { path: 'usuarios', element: page(Usuarios) },
+          { path: 'categorias', element: page(Categorias) },
+          { path: 'configuracion', element: page(Configuracion) },
+        ],
+      },
     ],
   },
 ])
