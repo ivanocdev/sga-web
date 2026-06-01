@@ -23,7 +23,6 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Alias de rutas — corresponde al alias '@' en vite.config.ts */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
