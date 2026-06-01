@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { lazy, Suspense, type ComponentType } from 'react'
 import MainLayout from '@/components/templates/MainLayout'
-import { ProtectedRoute, PublicRoute } from '@/components/templates/ProtectedRoute'
+import { ProtectedRoute, PublicRoute, AdminRoute } from '@/components/templates/ProtectedRoute'
 
 // Carga diferida por ruta — cada página genera su propio chunk, reduciendo el bundle inicial
 const Login = lazy(() => import('@/pages/Login'))
@@ -43,7 +43,11 @@ export const router = createBrowserRouter([
           { path: 'almacen/cajas/:productoId', element: page(CajasProducto) },
           { path: 'ventas', element: page(Ventas) },
           { path: 'ventas/:ventaId/productos', element: page(ProductosVenta) },
-          { path: 'usuarios', element: page(Usuarios) },
+          {
+            // solo admins pueden gestionar usuarios
+            element: <AdminRoute />,
+            children: [{ path: 'usuarios', element: page(Usuarios) }],
+          },
           { path: 'categorias', element: page(Categorias) },
           { path: 'configuracion', element: page(Configuracion) },
         ],

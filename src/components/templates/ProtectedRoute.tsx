@@ -23,6 +23,15 @@ export function PublicRoute() {
   return <Outlet />
 }
 
+// rutas exclusivas para administradores — ya sabemos que hay sesión porque está dentro de ProtectedRoute
+export function AdminRoute() {
+  const { usuario } = useAuth()
+
+  if (usuario?.rol !== 'admin') return <Navigate to="/" replace />
+
+  return <Outlet />
+}
+
 const Centrado = styled.div`
   min-height: 100vh;
   display: flex;
