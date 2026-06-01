@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "almacen": "Almacén",
+    "racks": "Racks",
+    "ventas": "Ventas",
+    "usuarios": "Usuarios",
+    "categorias": "Categorías",
+    "configuracion": "Configuración",
+    "cerrarSesion": "Cerrar sesión"
+  },
+  "auth": {
+    "iniciarSesion": "Iniciar sesión",
+    "correo": "Correo electrónico",
+    "contrasena": "Contraseña",
+    "cargando": "Iniciando sesión...",
+    "bienvenido": "Bienvenido de nuevo"
+  },
+  "common": {
+    "guardar": "Guardar",
+    "cancelar": "Cancelar",
+    "editar": "Editar",
+    "eliminar": "Eliminar",
+    "buscar": "Buscar",
+    "filtrar": "Filtrar",
+    "exportar": "Exportar",
+    "cargar": "Cargar archivo",
+    "cargando": "Cargando...",
+    "sin_resultados": "Sin resultados",
+    "confirmar": "Confirmar",
+    "registrar": "Registrar",
+    "acciones": "Acciones",
+    "anterior": "Anterior",
+    "siguiente": "Siguiente",
+    "de": "de",
+    "pagina": "Página",
+    "si": "Sí",
+    "no": "No",
+    "aceptar": "Aceptar",
+    "cerrar": "Cerrar",
+    "nuevo": "Nuevo",
+    "ver_detalle": "Ver detalle",
+    "activo": "Activo",
+    "inactivo": "Inactivo"
+  },
+  "tema": {
+    "claro": "Claro",
+    "oscuro": "Oscuro",
+    "cambiar": "Cambiar tema"
+  },
+  "idioma": {
+    "es": "Español",
+    "en": "English",
+    "cambiar": "Cambiar idioma"
+  },
+  "productos": {
+    "titulo": "Productos",
+    "nombre": "Nombre",
+    "marca": "Marca",
+    "categoria": "Categoría",
+    "cantidad": "Cantidad",
+    "fecha_caducidad": "Fecha de caducidad",
+    "codigo_barras": "Código de barras",
+    "imagen": "Imagen",
+    "ubicacion": "Ubicación",
+    "piso": "Piso",
+    "suelto": "Suelto",
+    "agregar": "Agregar producto",
+    "editar": "Editar producto",
+    "carga_masiva": "Carga masiva desde Excel",
+    "exportar_inventario": "Exportar inventario",
+    "sin_productos": "No hay productos registrados",
+    "todas_marcas": "Todas las marcas"
+  },
+  "racks": {
+    "titulo": "Racks",
+    "numero": "Número de rack",
+    "estado": "Estado",
+    "libre": "Libre",
+    "ocupado": "Ocupado",
+    "capacidad": "Capacidad",
+    "notas": "Notas",
+    "agregar": "Agregar rack",
+    "sin_racks": "No hay racks registrados"
+  },
+  "cajas": {
+    "titulo": "Cajas",
+    "entrada": "Entrada",
+    "cantidad": "Cantidad",
+    "fecha_entrada": "Fecha de entrada",
+    "fecha_caducidad": "Fecha de caducidad",
+    "agregar_entrada": "Registrar entrada",
+    "historial": "Historial de entradas",
+    "sin_cajas": "No hay entradas registradas"
+  },
+  "ventas": {
+    "titulo": "Ventas",
+    "folio": "Folio",
+    "fecha": "Fecha",
+    "estado": "Estado",
+    "responsable": "Responsable",
+    "ayudantes": "Ayudantes",
+    "asignar_equipo": "Asignar equipo",
+    "pendiente": "Pendiente",
+    "en_proceso": "En proceso",
+    "completado": "Completado",
+    "devuelto": "Devuelto",
+    "agregar": "Registrar venta",
+    "detalle": "Ver productos",
+    "devolucion": "Registrar devolución",
+    "subir_factura": "Subir factura",
+    "sin_ventas": "No hay ventas registradas",
+    "todos_estados": "Todos los estados"
+  },
+  "usuarios": {
+    "titulo": "Usuarios",
+    "nombre": "Nombre",
+    "correo": "Correo",
+    "rol": "Rol",
+    "agregar": "Agregar usuario",
+    "editar": "Editar usuario",
+    "sin_usuarios": "No hay usuarios registrados"
+  },
+  "categorias": {
+    "titulo": "Categorías",
+    "nombre": "Nombre",
+    "agregar": "Agregar categoría",
+    "sin_categorias": "No hay categorías registradas"
+  },
+  "marcas": {
+    "titulo": "Marcas",
+    "nombre": "Nombre",
+    "agregar": "Agregar marca",
+    "sin_marcas": "No hay marcas registradas"
+  },
+  "dashboard": {
+    "titulo": "Dashboard",
+    "por_caducar": "Próximos a caducar",
+    "pedidos_activos": "Pedidos activos",
+    "movimientos": "Movimientos recientes",
+    "ventas_marca": "Ventas por marca",
+    "sin_datos": "Sin datos disponibles"
+  },
+  "configuracion": {
+    "titulo": "Configuración",
+    "cuenta": "Mi cuenta",
+    "cambiar_contrasena": "Cambiar contraseña",
+    "contrasena_actual": "Contraseña actual",
+    "nueva_contrasena": "Nueva contraseña",
+    "confirmar_contrasena": "Confirmar contraseña",
+    "actualizar": "Actualizar contraseña"
+  },
+  "errores": {
+    "generico": "Ha ocurrido un error. Intenta de nuevo.",
+    "credenciales": "Correo o contraseña incorrectos.",
+    "requerido": "Este campo es requerido.",
+    "formato_correo": "Ingresa un correo válido.",
+    "contrasena_corta": "La contraseña debe tener al menos 8 caracteres.",
+    "contrasenas_no_coinciden": "Las contraseñas no coinciden.",
+    "sin_permiso": "No tienes permiso para realizar esta acción.",
+    "archivo_invalido": "Formato de archivo no permitido.",
+    "archivo_grande": "El archivo supera el tamaño máximo permitido."
+  }
+}

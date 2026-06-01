@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "almacen": "Warehouse",
+    "racks": "Racks",
+    "ventas": "Sales",
+    "usuarios": "Users",
+    "categorias": "Categories",
+    "configuracion": "Settings",
+    "cerrarSesion": "Sign out"
+  },
+  "auth": {
+    "iniciarSesion": "Sign in",
+    "correo": "Email",
+    "contrasena": "Password",
+    "cargando": "Signing in...",
+    "bienvenido": "Welcome back"
+  },
+  "common": {
+    "guardar": "Save",
+    "cancelar": "Cancel",
+    "editar": "Edit",
+    "eliminar": "Delete",
+    "buscar": "Search",
+    "filtrar": "Filter",
+    "exportar": "Export",
+    "cargar": "Upload file",
+    "cargando": "Loading...",
+    "sin_resultados": "No results",
+    "confirmar": "Confirm",
+    "registrar": "Register",
+    "acciones": "Actions",
+    "anterior": "Previous",
+    "siguiente": "Next",
+    "de": "of",
+    "pagina": "Page",
+    "si": "Yes",
+    "no": "No",
+    "aceptar": "Accept",
+    "cerrar": "Close",
+    "nuevo": "New",
+    "ver_detalle": "View detail",
+    "activo": "Active",
+    "inactivo": "Inactive"
+  },
+  "tema": {
+    "claro": "Light",
+    "oscuro": "Dark",
+    "cambiar": "Toggle theme"
+  },
+  "idioma": {
+    "es": "Español",
+    "en": "English",
+    "cambiar": "Change language"
+  },
+  "productos": {
+    "titulo": "Products",
+    "nombre": "Name",
+    "marca": "Brand",
+    "categoria": "Category",
+    "cantidad": "Quantity",
+    "fecha_caducidad": "Expiration date",
+    "codigo_barras": "Barcode",
+    "imagen": "Image",
+    "ubicacion": "Location",
+    "piso": "Floor",
+    "suelto": "Loose",
+    "agregar": "Add product",
+    "editar": "Edit product",
+    "carga_masiva": "Bulk upload from Excel",
+    "exportar_inventario": "Export inventory",
+    "sin_productos": "No products registered",
+    "todas_marcas": "All brands"
+  },
+  "racks": {
+    "titulo": "Racks",
+    "numero": "Rack number",
+    "estado": "Status",
+    "libre": "Available",
+    "ocupado": "Occupied",
+    "capacidad": "Capacity",
+    "notas": "Notes",
+    "agregar": "Add rack",
+    "sin_racks": "No racks registered"
+  },
+  "cajas": {
+    "titulo": "Boxes",
+    "entrada": "Entry",
+    "cantidad": "Quantity",
+    "fecha_entrada": "Entry date",
+    "fecha_caducidad": "Expiration date",
+    "agregar_entrada": "Register entry",
+    "historial": "Entry history",
+    "sin_cajas": "No entries registered"
+  },
+  "ventas": {
+    "titulo": "Sales",
+    "folio": "Invoice",
+    "fecha": "Date",
+    "estado": "Status",
+    "responsable": "Assigned to",
+    "ayudantes": "Helpers",
+    "asignar_equipo": "Assign team",
+    "pendiente": "Pending",
+    "en_proceso": "In progress",
+    "completado": "Completed",
+    "devuelto": "Returned",
+    "agregar": "Register sale",
+    "detalle": "View products",
+    "devolucion": "Register return",
+    "subir_factura": "Upload invoice",
+    "sin_ventas": "No sales registered",
+    "todos_estados": "All statuses"
+  },
+  "usuarios": {
+    "titulo": "Users",
+    "nombre": "Name",
+    "correo": "Email",
+    "rol": "Role",
+    "agregar": "Add user",
+    "editar": "Edit user",
+    "sin_usuarios": "No users registered"
+  },
+  "categorias": {
+    "titulo": "Categories",
+    "nombre": "Name",
+    "agregar": "Add category",
+    "sin_categorias": "No categories registered"
+  },
+  "marcas": {
+    "titulo": "Brands",
+    "nombre": "Name",
+    "agregar": "Add brand",
+    "sin_marcas": "No brands registered"
+  },
+  "dashboard": {
+    "titulo": "Dashboard",
+    "por_caducar": "Expiring soon",
+    "pedidos_activos": "Active orders",
+    "movimientos": "Recent activity",
+    "ventas_marca": "Sales by brand",
+    "sin_datos": "No data available"
+  },
+  "configuracion": {
+    "titulo": "Settings",
+    "cuenta": "My account",
+    "cambiar_contrasena": "Change password",
+    "contrasena_actual": "Current password",
+    "nueva_contrasena": "New password",
+    "confirmar_contrasena": "Confirm password",
+    "actualizar": "Update password"
+  },
+  "errores": {
+    "generico": "Something went wrong. Please try again.",
+    "credenciales": "Incorrect email or password.",
+    "requerido": "This field is required.",
+    "formato_correo": "Please enter a valid email address.",
+    "contrasena_corta": "Password must be at least 8 characters.",
+    "contrasenas_no_coinciden": "Passwords do not match.",
+    "sin_permiso": "You don't have permission to perform this action.",
+    "archivo_invalido": "File format not allowed.",
+    "archivo_grande": "File exceeds the maximum allowed size."
+  }
+}
