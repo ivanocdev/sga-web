@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { LuWarehouse } from 'react-icons/lu'
 import { TablaProductos } from '@/components/organisms/tables/TablaProductos'
 import { SearchInput } from '@/components/atoms/SearchInput'
+import { FiltroMarcas } from '@/components/molecules/FiltroMarcas'
 import { useProductos } from '@/hooks/useProductos'
 import { useProductosStore } from '@/store/productosStore'
 import { bp } from '@/styles/breakpoints'
@@ -28,6 +29,7 @@ export default function Almacen() {
         </TitleRow>
         <Buttons>
           <SearchInput onSearch={handleSearch} />
+          <FiltroMarcas />
         </Buttons>
       </Header>
 
