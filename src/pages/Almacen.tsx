@@ -2,12 +2,13 @@ import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { LuWarehouse } from 'react-icons/lu'
-import { FiPlus, FiUploadCloud } from 'react-icons/fi'
+import { FiPlus, FiUploadCloud, FiDownload } from 'react-icons/fi'
 import { TablaProductos } from '@/components/organisms/tables/TablaProductos'
 import { SearchInput } from '@/components/atoms/SearchInput'
 import { FiltroMarcas } from '@/components/molecules/FiltroMarcas'
 import { FormProducto } from '@/components/organisms/forms/FormProducto'
 import { CargarProductosExcel } from '@/components/molecules/CargarProductosExcel'
+import { exportarProductosExcel } from '@/utils/exportarExcel'
 import { useProductos } from '@/hooks/useProductos'
 import { useProductosStore } from '@/store/productosStore'
 import { bp } from '@/styles/breakpoints'
@@ -52,6 +53,10 @@ export default function Almacen() {
         <Buttons>
           <SearchInput onSearch={handleSearch} />
           <FiltroMarcas />
+          <ExportBtn onClick={() => exportarProductosExcel(data)} disabled={!data.length}>
+            <FiDownload size={15} />
+            Exportar
+          </ExportBtn>
           <ImportBtn onClick={() => setImportOpen(true)}>
             <FiUploadCloud size={15} />
             Cargar Excel
@@ -124,6 +129,35 @@ const Card = styled.div`
   overflow: hidden;
   flex: 1;
   min-height: 0;
+`
+
+const ExportBtn = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 38px;
+  padding: 0 1rem;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.border};
+  background: ${({ theme }) => theme.surface};
+  color: ${({ theme }) => theme.text};
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.surfaceHover};
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  svg {
+    color: ${({ theme }) => theme.warning};
+  }
 `
 
 const ImportBtn = styled.button`
