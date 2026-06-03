@@ -38,7 +38,7 @@ export default function Login() {
     <Wrapper>
       <Card>
         {/* logo va aquí cuando el usuario suba sga_logo.svg a public/ */}
-        <LogoPlaceholder>SGA</LogoPlaceholder>
+        <LogoMark>SGA</LogoMark>
         <Title>{t('auth.bienvenido')}</Title>
 
         <Form onSubmit={handleSubmit} noValidate>
@@ -82,15 +82,16 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f0f2f5;
+  background: ${({ theme }) => theme.bg};
 `
 
 const Card = styled.div`
   width: 100%;
   max-width: 400px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+  background: ${({ theme }) => theme.surface};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 12px;
+  box-shadow: ${({ theme }) => theme.shadowCard};
   padding: 2.5rem 2rem;
   display: flex;
   flex-direction: column;
@@ -98,16 +99,16 @@ const Card = styled.div`
   gap: 0.5rem;
 `
 
-const LogoPlaceholder = styled.div`
-  width: 64px;
-  height: 64px;
+const LogoMark = styled.div`
+  width: 56px;
+  height: 56px;
   border-radius: 12px;
-  background: #1a1a2e;
+  background: ${({ theme }) => theme.primary};
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
@@ -116,7 +117,7 @@ const LogoPlaceholder = styled.div`
 const Title = styled.h1`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111;
+  color: ${({ theme }) => theme.text};
   margin: 0 0 1.25rem;
 `
 
@@ -136,52 +137,53 @@ const Field = styled.div`
 const Label = styled.label`
   font-size: 0.875rem;
   font-weight: 500;
-  color: #444;
+  color: ${({ theme }) => theme.textMuted};
 `
 
 const Input = styled.input`
   padding: 0.6rem 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid ${({ theme }) => theme.inputBorder};
   border-radius: 6px;
   font-size: 0.9375rem;
+  background: ${({ theme }) => theme.inputBg};
+  color: ${({ theme }) => theme.text};
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 
   &:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    border-color: ${({ theme }) => theme.inputFocus};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.primaryLight};
   }
 
   &:disabled {
-    background: #f9fafb;
+    opacity: 0.6;
     cursor: not-allowed;
   }
 `
 
 const ErrorMsg = styled.p`
   font-size: 0.875rem;
-  color: #dc2626;
+  color: ${({ theme }) => theme.danger};
   margin: 0;
 `
 
 const Button = styled.button`
   margin-top: 0.25rem;
   padding: 0.65rem;
-  background: #2563eb;
+  background: ${({ theme }) => theme.primary};
   color: #fff;
   border: none;
   border-radius: 6px;
   font-size: 0.9375rem;
   font-weight: 600;
-  cursor: pointer;
   transition: background 0.15s;
 
   &:hover:not(:disabled) {
-    background: #1d4ed8;
+    background: ${({ theme }) => theme.primaryHover};
   }
 
   &:disabled {
-    background: #93c5fd;
+    opacity: 0.6;
     cursor: not-allowed;
   }
 `

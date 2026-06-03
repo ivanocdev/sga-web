@@ -1,4 +1,5 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import {
@@ -9,18 +10,13 @@ import {
   MdCategory,
   MdPeople,
   MdSettings,
-  MdChevronLeft,
-  MdChevronRight,
   MdLogout,
+  MdClose,
 } from 'react-icons/md'
 import { useAuth } from '@/context/AuthContext'
 import { useUiStore } from '@/store/uiStore'
-import { bp } from '@/styles/breakpoints'
-import ThemeToggle from '@/components/atoms/ThemeToggle'
-import LanguageToggle from '@/components/atoms/LanguageToggle'
 
-export const SIDEBAR_W_OPEN = 240
-export const SIDEBAR_W_CLOSED = 64
+const DRAWER_W = 280
 
 interface NavItem {
   key: string
@@ -40,11 +36,25 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'configuracion', path: '/configuracion', icon: MdSettings },
 ]
 
-export default function Sidebar() {
+export default function SidebarMobile() {
   const { t } = useTranslation()
   const { usuario, signOut } = useAuth()
-  const { sidebarAbierto, toggleSidebar } = useUiStore()
+  const { drawerMobile, setDrawer } = useUiStore()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // cerrar drawer al navegar — no afecta el estado del sidebar desktop
+  useEffect(() => {
+    setDrawer(false)
+  }, [location.pathname, setDrawer])
+
+  // bloquear scroll del body mientras el drawer está abierto
+  useEffect(() => {
+    document.body.style.overflow = drawerMobile ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [drawerMobile])
 
   async function handleSignOut() {
     await signOut()
@@ -56,91 +66,94 @@ export default function Sidebar() {
   )
 
   return (
-    <Nav $open={sidebarAbierto}>
-      <LogoArea>
-        {/* reemplazar por <img src="/sga_logo.svg" /> cuando el usuario suba el archivo */}
-        <LogoMark>SGA</LogoMark>
-        {sidebarAbierto && <LogoText>Almacén</LogoText>}
-      </LogoArea>
+    <>
+      <Overlay $visible={drawerMobile} onClick={() => setDrawer(false)} />
+      <Drawer $open={drawerMobile}>
+        <DrawerHeader>
+          <LogoArea>
+            <LogoMark>SGA</LogoMark>
+            <LogoText>Almacén</LogoText>
+          </LogoArea>
+          <CloseBtn onClick={() => setDrawer(false)} aria-label="Cerrar menú">
+            <MdClose size={22} />
+          </CloseBtn>
+        </DrawerHeader>
 
-      <ToggleBtn
-        onClick={toggleSidebar}
-        title={sidebarAbierto ? 'Contraer' : 'Expandir'}
-      >
-        {sidebarAbierto ? (
-          <MdChevronLeft size={18} />
-        ) : (
-          <MdChevronRight size={18} />
-        )}
-      </ToggleBtn>
+        <NavList>
+          {items.map(({ key, path, icon: Icon, end }) => (
+            <li key={key}>
+              <Item to={path} end={end}>
+                <Icon size={20} />
+                <span>{t(`nav.${key}`)}</span>
+              </Item>
+            </li>
+          ))}
+        </NavList>
 
-      <NavList>
-        {items.map(({ key, path, icon: Icon, end }) => (
-          <li key={key}>
-            <Item
-              to={path}
-              end={end}
-              title={!sidebarAbierto ? t(`nav.${key}`) : undefined}
-            >
-              <Icon size={20} />
-              {sidebarAbierto && <span>{t(`nav.${key}`)}</span>}
-            </Item>
-          </li>
-        ))}
-      </NavList>
-
-      <Footer>
-        <Controls $open={sidebarAbierto}>
-          <ThemeToggle showLabel={sidebarAbierto} />
-          {sidebarAbierto && <LanguageToggle />}
-        </Controls>
-
-        {sidebarAbierto && usuario && (
-          <UserInfo>
-            <UserName>{usuario.nombre}</UserName>
-            <UserRole>{usuario.rol}</UserRole>
-          </UserInfo>
-        )}
-        <LogoutBtn
-          onClick={handleSignOut}
-          title={!sidebarAbierto ? t('nav.cerrarSesion') : undefined}
-        >
-          <MdLogout size={18} />
-          {sidebarAbierto && <span>{t('nav.cerrarSesion')}</span>}
-        </LogoutBtn>
-      </Footer>
-    </Nav>
+        <Footer>
+          {usuario && (
+            <UserInfo>
+              <UserName>{usuario.nombre}</UserName>
+              <UserRole>{usuario.rol}</UserRole>
+            </UserInfo>
+          )}
+          <LogoutBtn onClick={handleSignOut}>
+            <MdLogout size={18} />
+            <span>{t('nav.cerrarSesion')}</span>
+          </LogoutBtn>
+        </Footer>
+      </Drawer>
+    </>
   )
 }
 
-const Nav = styled.nav<{ $open: boolean }>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: ${({ $open }) => ($open ? SIDEBAR_W_OPEN : SIDEBAR_W_CLOSED)}px;
-  background: ${({ theme }) => theme.sidebar};
-  border-right: 1px solid ${({ theme }) => theme.sidebarBorder};
-  display: flex;
-  flex-direction: column;
-  transition: width 0.25s ease;
-  z-index: 100;
-  overflow: hidden;
+const Overlay = styled.div<{ $visible: boolean }>`
+  display: none;
 
-  /* el sidebar mobile se encarga de esto */
-  @media ${bp.maxMd} {
-    display: none;
+  @media (max-width: 767px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 110;
+    opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+    pointer-events: ${({ $visible }) => ($visible ? 'all' : 'none')};
+    transition: opacity 0.25s ease;
   }
+`
+
+const Drawer = styled.aside<{ $open: boolean }>`
+  display: none;
+
+  @media (max-width: 767px) {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: ${DRAWER_W}px;
+    max-width: 85vw;
+    background: ${({ theme }) => theme.sidebar};
+    z-index: 120;
+    transform: translateX(${({ $open }) => ($open ? '0' : '-100%')});
+    transition: transform 0.25s ease;
+  }
+`
+
+const DrawerHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1rem;
+  min-height: 64px;
+  border-bottom: 1px solid ${({ theme }) => theme.sidebarBorder};
 `
 
 const LogoArea = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1.25rem 1rem;
-  min-height: 64px;
-  border-bottom: 1px solid ${({ theme }) => theme.sidebarBorder};
-  overflow: hidden;
 `
 
 const LogoMark = styled.div`
@@ -162,21 +175,18 @@ const LogoText = styled.span`
   color: ${({ theme }) => theme.sidebarTextActive};
   font-size: 0.9375rem;
   font-weight: 600;
-  white-space: nowrap;
 `
 
-const ToggleBtn = styled.button`
+const CloseBtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  margin: 0.75rem auto;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   background: ${({ theme }) => theme.sidebarHover};
-  border: 1px solid ${({ theme }) => theme.sidebarBorder};
+  border: none;
   color: ${({ theme }) => theme.sidebarText};
-  flex-shrink: 0;
   transition: background 0.15s, color 0.15s;
 
   &:hover {
@@ -188,22 +198,20 @@ const ToggleBtn = styled.button`
 const NavList = styled.ul`
   list-style: none;
   flex: 1;
-  padding: 0.25rem 0;
+  padding: 0.5rem 0;
   overflow-y: auto;
-  overflow-x: hidden;
 `
 
 const Item = styled(NavLink)`
   display: flex;
   align-items: center;
   gap: 0.875rem;
-  padding: 0.65rem 1rem;
+  padding: 0.75rem 1.25rem;
   margin: 0.125rem 0.5rem;
   border-radius: 8px;
   color: ${({ theme }) => theme.sidebarText};
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  white-space: nowrap;
   transition: background 0.15s, color 0.15s;
 
   &:hover {
@@ -226,17 +234,13 @@ const Footer = styled.div`
 `
 
 const UserInfo = styled.div`
-  padding: 0.25rem 0.5rem;
-  overflow: hidden;
+  padding: 0.25rem 0.75rem;
 `
 
 const UserName = styled.p`
   color: ${({ theme }) => theme.sidebarTextActive};
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `
 
 const UserRole = styled.p`
@@ -245,27 +249,19 @@ const UserRole = styled.p`
   text-transform: capitalize;
 `
 
-const Controls = styled.div<{ $open: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0 0.25rem;
-  justify-content: ${({ $open }) => ($open ? 'flex-start' : 'center')};
-`
-
 const LogoutBtn = styled.button`
   display: flex;
   align-items: center;
   gap: 0.875rem;
-  padding: 0.65rem 1rem;
+  padding: 0.75rem 1.25rem;
+  margin: 0 0.5rem;
   border-radius: 8px;
   background: transparent;
   border: none;
   color: ${({ theme }) => theme.sidebarText};
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  width: 100%;
-  white-space: nowrap;
+  width: calc(100% - 1rem);
   transition: background 0.15s, color 0.15s;
 
   &:hover {

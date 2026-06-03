@@ -1,93 +1,114 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
-import { useTranslation } from 'react-i18next'
-import { useAuth } from '@/context/AuthContext'
+import { MdMenu } from 'react-icons/md'
+import { useUiStore } from '@/store/uiStore'
+import Sidebar, { SIDEBAR_W_OPEN, SIDEBAR_W_CLOSED } from '@/components/organisms/sidebar/Sidebar'
+import SidebarMobile from '@/components/organisms/sidebar/SidebarMobile'
+import ThemeToggle from '@/components/atoms/ThemeToggle'
+import LanguageToggle from '@/components/atoms/LanguageToggle'
+import { bp } from '@/styles/breakpoints'
 
-// barra temporal hasta que llegue el sidebar en Bloque 3
+const TOPBAR_H = 56
+
 export default function MainLayout() {
-  const { usuario, signOut } = useAuth()
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-
-  async function handleSignOut() {
-    await signOut()
-    navigate('/login')
-  }
+  const { sidebarAbierto, toggleDrawer } = useUiStore()
 
   return (
     <Wrapper>
-      <TopBar>
-        <AppName>SGA</AppName>
-        <UserArea>
-          {usuario && (
-            <UserInfo>
-              {usuario.nombre} · <Role>{usuario.rol}</Role>
-            </UserInfo>
-          )}
-          <SignOutBtn onClick={handleSignOut}>{t('nav.cerrarSesion')}</SignOutBtn>
-        </UserArea>
-      </TopBar>
-      <Content>
+      <Sidebar />
+      <SidebarMobile />
+
+      {/* topbar fijo solo en mobile — en desktop el sidebar lo reemplaza */}
+      <MobileTopBar>
+        <HamburgerBtn onClick={toggleDrawer} aria-label="Abrir menú">
+          <MdMenu size={24} />
+        </HamburgerBtn>
+        <MobileLogoMark>SGA</MobileLogoMark>
+        <TopBarRight>
+          <ThemeToggle />
+          <LanguageToggle />
+        </TopBarRight>
+      </MobileTopBar>
+
+      <Main $open={sidebarAbierto}>
         <Outlet />
-      </Content>
+      </Main>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
 `
 
-const TopBar = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1.5rem;
-  height: 56px;
-  background: #1a1a2e;
-  color: #fff;
-`
+const MobileTopBar = styled.header`
+  display: none;
 
-const AppName = styled.span`
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.05em;
-`
-
-const UserArea = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`
-
-const UserInfo = styled.span`
-  font-size: 0.875rem;
-  color: #cbd5e1;
-`
-
-const Role = styled.span`
-  text-transform: capitalize;
-`
-
-const SignOutBtn = styled.button`
-  padding: 0.35rem 0.75rem;
-  background: transparent;
-  border: 1px solid #475569;
-  border-radius: 5px;
-  color: #cbd5e1;
-  font-size: 0.8125rem;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
-
-  &:hover {
-    border-color: #94a3b8;
-    color: #fff;
+  @media ${bp.maxMd} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: ${TOPBAR_H}px;
+    padding: 0 1rem;
+    background: ${({ theme }) => theme.sidebar};
+    border-bottom: 1px solid ${({ theme }) => theme.sidebarBorder};
+    z-index: 100;
   }
 `
 
-const Content = styled.main`
+const HamburgerBtn = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: ${({ theme }) => theme.sidebarText};
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: ${({ theme }) => theme.sidebarHover};
+    color: ${({ theme }) => theme.sidebarTextActive};
+  }
+`
+
+const MobileLogoMark = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.primary};
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+`
+
+const TopBarRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+`
+
+const Main = styled.main<{ $open: boolean }>`
   flex: 1;
+  min-width: 0;
+  margin-left: ${({ $open }) => ($open ? SIDEBAR_W_OPEN : SIDEBAR_W_CLOSED)}px;
   padding: 1.5rem;
+  transition: margin-left 0.25s ease;
+
+  @media ${bp.maxMd} {
+    margin-left: 0;
+    padding: 1rem;
+    padding-top: calc(${TOPBAR_H}px + 1rem);
+  }
 `
