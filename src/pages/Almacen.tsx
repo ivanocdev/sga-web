@@ -1,10 +1,12 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { LuWarehouse } from 'react-icons/lu'
+import { FiPlus } from 'react-icons/fi'
 import { TablaProductos } from '@/components/organisms/tables/TablaProductos'
 import { SearchInput } from '@/components/atoms/SearchInput'
 import { FiltroMarcas } from '@/components/molecules/FiltroMarcas'
+import { FormProducto } from '@/components/organisms/forms/FormProducto'
 import { useProductos } from '@/hooks/useProductos'
 import { useProductosStore } from '@/store/productosStore'
 import { bp } from '@/styles/breakpoints'
@@ -14,14 +16,31 @@ export default function Almacen() {
   const { t } = useTranslation()
   const { data = [], isLoading } = useProductos()
   const { setBusqueda } = useProductosStore()
+  const [formOpen, setFormOpen] = useState(false)
+  const [editId, setEditId] = useState<number | undefined>()
 
   // referencia estable para que el debounce no se reinicie en cada render
   const handleSearch = useCallback((v: string) => setBusqueda(v), [setBusqueda])
 
-  const handleEditar = (_producto: Producto) => {}
+  function handleEditar(producto: Producto) {
+    setEditId(producto.id)
+    setFormOpen(true)
+  }
+
+  function handleNuevo() {
+    setEditId(undefined)
+    setFormOpen(true)
+  }
+
+  function handleClose() {
+    setFormOpen(false)
+    setEditId(undefined)
+  }
 
   return (
     <Container>
+      {formOpen && <FormProducto productoId={editId} onClose={handleClose} />}
+
       <Header>
         <TitleRow>
           <LuWarehouse size={22} />
@@ -30,6 +49,10 @@ export default function Almacen() {
         <Buttons>
           <SearchInput onSearch={handleSearch} />
           <FiltroMarcas />
+          <NewBtn onClick={handleNuevo}>
+            <FiPlus size={15} />
+            {t('productos.agregar')}
+          </NewBtn>
         </Buttons>
       </Header>
 
@@ -94,4 +117,25 @@ const Card = styled.div`
   overflow: hidden;
   flex: 1;
   min-height: 0;
+`
+
+const NewBtn = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 38px;
+  padding: 0 1rem;
+  border-radius: 8px;
+  border: none;
+  background: ${({ theme }) => theme.primary};
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+
+  &:hover {
+    background: ${({ theme }) => theme.primaryHover};
+  }
 `
