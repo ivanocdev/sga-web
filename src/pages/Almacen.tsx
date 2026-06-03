@@ -1,14 +1,21 @@
+import { useCallback } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { LuWarehouse } from 'react-icons/lu'
 import { TablaProductos } from '@/components/organisms/tables/TablaProductos'
+import { SearchInput } from '@/components/atoms/SearchInput'
 import { useProductos } from '@/hooks/useProductos'
+import { useProductosStore } from '@/store/productosStore'
 import { bp } from '@/styles/breakpoints'
 import type { Producto } from '@/types/productos'
 
 export default function Almacen() {
   const { t } = useTranslation()
   const { data = [], isLoading } = useProductos()
+  const { setBusqueda } = useProductosStore()
+
+  // referencia estable para que el debounce no se reinicie en cada render
+  const handleSearch = useCallback((v: string) => setBusqueda(v), [setBusqueda])
 
   const handleEditar = (_producto: Producto) => {}
 
@@ -19,7 +26,9 @@ export default function Almacen() {
           <LuWarehouse size={22} />
           <h1>{t('productos.titulo')}</h1>
         </TitleRow>
-        <Buttons />
+        <Buttons>
+          <SearchInput onSearch={handleSearch} />
+        </Buttons>
       </Header>
 
       <Card>
