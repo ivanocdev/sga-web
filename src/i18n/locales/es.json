@@ -93,13 +93,21 @@
     "sin_racks": "No hay racks registrados"
   },
   "cajas": {
-    "titulo": "Cajas",
+    "titulo": "Inventario",
     "entrada": "Entrada",
     "cantidad": "Cantidad",
     "fecha_entrada": "Fecha de entrada",
     "fecha_caducidad": "Fecha de caducidad",
+    "codigo_barras": "Código de barras",
+    "ubicacion": "Ubicación",
+    "tipo": "Tipo",
+    "tipo_caja": "Caja",
+    "tipo_suelto": "Suelto",
+    "tipo_piso": "En piso",
     "agregar_entrada": "Registrar entrada",
+    "editar": "Editar registro",
     "historial": "Historial de entradas",
+    "volver": "Volver a almacén",
     "sin_cajas": "No hay entradas registradas"
   },
   "ventas": {

@@ -93,13 +93,21 @@
     "sin_racks": "No racks registered"
   },
   "cajas": {
-    "titulo": "Boxes",
+    "titulo": "Inventory",
     "entrada": "Entry",
     "cantidad": "Quantity",
     "fecha_entrada": "Entry date",
     "fecha_caducidad": "Expiration date",
+    "codigo_barras": "Barcode",
+    "ubicacion": "Location",
+    "tipo": "Type",
+    "tipo_caja": "Box",
+    "tipo_suelto": "Loose",
+    "tipo_piso": "On floor",
     "agregar_entrada": "Register entry",
+    "editar": "Edit entry",
     "historial": "Entry history",
+    "volver": "Back to warehouse",
     "sin_cajas": "No entries registered"
   },
   "ventas": {

@@ -129,6 +129,19 @@ export async function insertarProductosMasivo(
   return data?.length ?? 0
 }
 
+// info mínima de un producto — usada para mostrar título en vista de cajas
+export async function fetchProductoBasico(
+  id: number
+): Promise<{ id: number; codigo: number; nombre: string }> {
+  const { data, error } = await supabase
+    .from(TABLA)
+    .select('id, codigo, nombre')
+    .eq('id', id)
+    .single()
+  if (error) throw error
+  return data
+}
+
 // capitalize estilo "Primera Letra De Cada Palabra"
 function toCapitalize(str: string): string {
   return str
