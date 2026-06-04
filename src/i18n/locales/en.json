@@ -75,12 +75,21 @@
   "racks": {
     "titulo": "Racks",
     "numero": "Rack number",
+    "codigo": "Code",
+    "nivel": "Level",
+    "lado": "Side",
+    "posicion": "Position",
+    "marca": "Brand",
+    "productos_en_rack": "Products",
     "estado": "Status",
     "libre": "Available",
     "ocupado": "Occupied",
     "capacidad": "Capacity",
     "notas": "Notes",
     "agregar": "Add rack",
+    "editar": "Edit rack",
+    "nuevo": "New rack",
+    "sin_producto": "No product",
     "sin_racks": "No racks registered"
   },
   "cajas": {

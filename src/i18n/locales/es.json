@@ -75,12 +75,21 @@
   "racks": {
     "titulo": "Racks",
     "numero": "Número de rack",
+    "codigo": "Código",
+    "nivel": "Nivel",
+    "lado": "Lado",
+    "posicion": "Posición",
+    "marca": "Marca",
+    "productos_en_rack": "Productos",
     "estado": "Estado",
     "libre": "Libre",
     "ocupado": "Ocupado",
     "capacidad": "Capacidad",
     "notas": "Notas",
     "agregar": "Agregar rack",
+    "editar": "Editar rack",
+    "nuevo": "Nuevo rack",
+    "sin_producto": "Sin producto",
     "sin_racks": "No hay racks registrados"
   },
   "cajas": {
