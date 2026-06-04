@@ -2,12 +2,21 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Swal from 'sweetalert2'
 import {
   fetchRacks,
+  fetchRacksLibres,
   insertarRack,
   editarRack,
   eliminarRack,
 } from '@/services/racksService'
 import { useRacksStore } from '@/store/racksStore'
 import type { RackFormValues } from '@/types/racks'
+
+export function useRacksLibres(rack_id_actual?: number) {
+  return useQuery({
+    queryKey: ['racks-libres', rack_id_actual ?? null],
+    queryFn: () => fetchRacksLibres(rack_id_actual),
+    staleTime: 1000 * 30,
+  })
+}
 
 export function useRacks() {
   const { busqueda } = useRacksStore()
