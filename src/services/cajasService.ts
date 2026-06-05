@@ -125,20 +125,12 @@ export async function editarRegistro(
     if (error) throw error
 
     if (rackCambio) {
-      const ops: Promise<unknown>[] = []
-      // liberar rack anterior
       if (registro.rack_id) {
-        ops.push(
-          supabase.from('racks').update({ ocupado: false }).eq('id', registro.rack_id)
-        )
+        await supabase.from('racks').update({ ocupado: false }).eq('id', registro.rack_id)
       }
-      // ocupar nuevo rack
       if (nuevoRackId) {
-        ops.push(
-          supabase.from('racks').update({ ocupado: true }).eq('id', nuevoRackId)
-        )
+        await supabase.from('racks').update({ ocupado: true }).eq('id', nuevoRackId)
       }
-      await Promise.all(ops)
     }
     return
   }

@@ -281,7 +281,7 @@ export function TablaVentas({ data, isLoading, onEditar, busqueda }: Props) {
                     value={
                       esDevolucion
                         ? '—'
-                        : (v.usuarios?.nombres ?? t('ventas.sin_asignar'))
+                        : (v.usuarios?.nombre ?? t('ventas.sin_asignar'))
                     }
                   />
                   <MobileCardRow label={t('ventas.cantidad_productos')} value={v.cantidad_productos ?? '—'} />
