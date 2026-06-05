@@ -276,6 +276,71 @@ export async function eliminarDetalleVenta(detalleId: number): Promise<void> {
   if (error) throw error
 }
 
+// valida qué códigos del listado no existen en la DB
+// devuelve los códigos no encontrados para avisar al usuario antes de procesar
+export async function validarProductos(
+  productos: FacturaProducto[]
+): Promise<string[]> {
+  const noEncontrados: string[] = []
+
+  for (const p of productos) {
+    const codigoNum = parseInt(p.codigo)
+    if (!codigoNum || isNaN(codigoNum)) {
+      noEncontrados.push(p.codigo)
+      continue
+    }
+
+    let query = supabase.from('productos').select('id').eq('codigo', codigoNum)
+
+    if (p.marca) {
+      const { data: marcaData } = await supabase
+        .from('marcas')
+        .select('id')
+        .ilike('nombre', p.marca.trim())
+        .maybeSingle()
+      if (marcaData?.id) {
+        query = query.eq('marca_id', marcaData.id)
+      }
+    }
+
+    const { data } = await query.maybeSingle()
+    if (!data) noEncontrados.push(p.codigo)
+  }
+
+  return noEncontrados
+}
+
+// inserta los productos devueltos en la tabla piso (vuelven al inventario de piso)
+export async function insertarEnPiso(productos: FacturaProducto[]): Promise<void> {
+  for (const p of productos) {
+    const codigoNum = parseInt(p.codigo)
+    if (!codigoNum || isNaN(codigoNum)) continue
+
+    let query = supabase.from('productos').select('id').eq('codigo', codigoNum)
+
+    if (p.marca) {
+      const { data: marcaData } = await supabase
+        .from('marcas')
+        .select('id')
+        .ilike('nombre', p.marca.trim())
+        .maybeSingle()
+      if (marcaData?.id) {
+        query = query.eq('marca_id', marcaData.id)
+      }
+    }
+
+    const { data: productoData } = await query.maybeSingle()
+    if (!productoData) continue
+
+    await supabase.from('piso').insert({
+      producto_id: productoData.id,
+      cantidad: p.cantidad || 1,
+      fecha_caducidad: null,
+      codigo_barras: 'devolucion',
+    })
+  }
+}
+
 export async function asignarEquipo(
   ventaId: number,
   responsableAuthId: string,
