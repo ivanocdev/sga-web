@@ -17,7 +17,7 @@ const SELECT_LISTA = `
   id, codigo, cantidad_productos, cantidad_total, fecha,
   factura_url, estado, marca_id, usuario,
   marcas(id, nombre),
-  usuarios(id, nombres)
+  usuarios(id, nombre)
 `.trim()
 
 export async function fetchVentas(filtros?: Partial<FiltrosVentas>): Promise<Venta[]> {
@@ -52,7 +52,7 @@ export async function fetchDetalleVenta(ventaId: number): Promise<DetalleVenta[]
 export async function fetchAyudantesVenta(ventaId: number): Promise<AyudanteVenta[]> {
   const { data, error } = await supabase
     .from(TABLA_AYUDANTES)
-    .select('id, venta_id, usuario_id, usuarios(id, nombres)')
+    .select('id, venta_id, usuario_id, usuarios(id, nombre)')
     .eq('venta_id', ventaId)
 
   if (error) throw error
@@ -62,7 +62,7 @@ export async function fetchAyudantesVenta(ventaId: number): Promise<AyudanteVent
 export async function fetchEquipoVenta(ventaId: number) {
   const { data, error } = await supabase
     .from(TABLA)
-    .select('id, usuario, estado, usuarios(id, nombres)')
+    .select('id, usuario, estado, usuarios(id, nombre)')
     .eq('id', ventaId)
     .single()
 
@@ -344,7 +344,7 @@ export async function insertarEnPiso(productos: FacturaProducto[]): Promise<void
 export async function asignarEquipo(
   ventaId: number,
   responsableAuthId: string,
-  ayudantesIds: number[]
+  ayudantesIds: string[]   // UUIDs de usuarios
 ): Promise<void> {
   // actualizar responsable en la venta
   const { error: errVenta } = await supabase

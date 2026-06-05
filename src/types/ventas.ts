@@ -3,8 +3,8 @@ import type { Marca } from './productos'
 export type EstadoVenta = 'Normal' | 'Devolucion'
 
 export interface UsuarioRef {
-  id: number
-  nombres: string
+  id: string   // UUID (mismo que usuarios.id = auth.uid())
+  nombre: string
 }
 
 export interface Venta {
@@ -43,7 +43,7 @@ export interface DetalleVenta {
 export interface AyudanteVenta {
   id: number
   venta_id: number
-  usuario_id: number
+  usuario_id: string  // UUID
   usuarios: UsuarioRef | null
 }
 

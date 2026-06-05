@@ -121,7 +121,7 @@ export function TablaVentas({ data, isLoading, onEditar, busqueda }: Props) {
         cell: ({ row }) => {
           if (row.original.estado === 'Devolucion') return <TextMuted>—</TextMuted>
           return (
-            <span>{row.original.usuarios?.nombres ?? <TextMuted>{t('ventas.sin_asignar')}</TextMuted>}</span>
+            <span>{row.original.usuarios?.nombre ?? <TextMuted>{t('ventas.sin_asignar')}</TextMuted>}</span>
           )
         },
       },

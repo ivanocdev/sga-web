@@ -126,7 +126,7 @@ export function useAsignarEquipo(ventaId: number, onSuccess?: () => void) {
       ayudantesIds,
     }: {
       responsableAuthId: string
-      ayudantesIds: number[]
+      ayudantesIds: string[]
     }) => asignarEquipo(ventaId, responsableAuthId, ayudantesIds),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['ventas'] })

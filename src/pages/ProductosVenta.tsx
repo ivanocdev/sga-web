@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { FiArrowLeft } from 'react-icons/fi'
+import { FiArrowLeft, FiUsers } from 'react-icons/fi'
 import styled from 'styled-components'
 import { bp } from '@/styles/breakpoints'
 import { TablaProductosVenta } from '@/components/organisms/tables/TablaProductosVenta'
+import { FormAsignarEquipo } from '@/components/organisms/forms/FormAsignarEquipo'
 import { useEquipoVenta, useAyudantesVenta } from '@/hooks/useVentas'
 
 export default function ProductosVenta() {
@@ -14,11 +16,16 @@ export default function ProductosVenta() {
 
   const { data: equipo } = useEquipoVenta(id)
   const { data: ayudantes = [] } = useAyudantesVenta(id)
+  const [modalEquipo, setModalEquipo] = useState(false)
 
   const isDevolucion = equipo?.estado === 'Devolucion'
 
   return (
     <PageWrapper>
+      {modalEquipo && (
+        <FormAsignarEquipo ventaId={id} onClose={() => setModalEquipo(false)} />
+      )}
+
       <Header>
         <BackBtn onClick={() => navigate('/ventas')} title={t('ventas.volver')}>
           <FiArrowLeft size={18} />
@@ -29,6 +36,13 @@ export default function ProductosVenta() {
           <h1>{t('ventas.productos_venta')}</h1>
           {isDevolucion && <DevolucionBadge>{t('ventas.devolucion_label')}</DevolucionBadge>}
         </TituloBloque>
+
+        {!isDevolucion && (
+          <AsignarBtn type="button" onClick={() => setModalEquipo(true)}>
+            <FiUsers size={15} />
+            <span>{t('ventas.asignar_equipo')}</span>
+          </AsignarBtn>
+        )}
       </Header>
 
       {/* info del equipo asignado — read-only en este commit, botón de asignar llega en el siguiente */}
@@ -36,7 +50,7 @@ export default function ProductosVenta() {
         <EquipoItem>
           <span className="label">{t('ventas.responsable')}</span>
           <span className="value">
-            {equipo?.usuarios?.nombres ?? <Muted>{t('ventas.sin_asignar')}</Muted>}
+            {equipo?.usuarios?.nombre ?? <Muted>{t('ventas.sin_asignar')}</Muted>}
           </span>
         </EquipoItem>
 
@@ -44,7 +58,7 @@ export default function ProductosVenta() {
           <span className="label">{t('ventas.ayudantes')}</span>
           <span className="value">
             {ayudantes.length > 0
-              ? ayudantes.map(a => a.usuarios?.nombres ?? '?').join(', ')
+              ? ayudantes.map(a => a.usuarios?.nombre ?? '?').join(', ')
               : <Muted>{t('ventas.sin_ayudantes')}</Muted>}
           </span>
         </EquipoItem>
@@ -94,6 +108,30 @@ const BackBtn = styled.button`
     color: ${({ theme }) => theme.text};
     background: ${({ theme }) => theme.surfaceHover};
   }
+
+  @media ${bp.md} {
+    span { display: inline; }
+  }
+`
+
+const AsignarBtn = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-left: auto;
+  height: 34px;
+  padding: 0 0.875rem;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.border};
+  background: transparent;
+  color: ${({ theme }) => theme.text};
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: ${({ theme }) => theme.surfaceHover}; }
+
+  span { display: none; }
 
   @media ${bp.md} {
     span { display: inline; }
