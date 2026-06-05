@@ -9,6 +9,7 @@ import { useMarcas } from '@/hooks/useProductos'
 import { useEditarVenta } from '@/hooks/useVentas'
 import { uploadFactura, insertarVenta, insertarProductosVenta } from '@/services/ventasService'
 import { parsearPdf } from '@/utils/parsearPdf'
+import { parsearExcel } from '@/utils/parsearExcel'
 import type { Venta, VentaFormValues, UploadType, FacturaParseada } from '@/types/ventas'
 
 interface Props {
@@ -93,18 +94,23 @@ export function FormVenta({ ventaEditar, onClose }: Props) {
     setArchivo(file)
     productosParsed.current = []
 
-    if (uploadType === 'pdf' && file.type === 'application/pdf') {
+    const esPdf = file.type === 'application/pdf'
+    const esExcel =
+      file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+      file.type === 'application/vnd.ms-excel'
+
+    if ((uploadType === 'pdf' && esPdf) || (uploadType === 'excel' && esExcel)) {
       setParsando(true)
       try {
-        const datos = await parsearPdf(file)
+        const datos = esPdf ? await parsearPdf(file) : await parsearExcel(file)
         if (datos) autoFill(datos)
       } catch (err) {
-        console.error('Error al parsear PDF:', err)
+        console.error('Error al parsear archivo:', err)
+        Swal.fire({ icon: 'warning', title: 'No se pudo analizar el archivo', text: (err as Error).message })
       } finally {
         setParsando(false)
       }
     }
-    // Excel parser se conecta en el siguiente commit
   }
 
   function onDrop(e: React.DragEvent) {
