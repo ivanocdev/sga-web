@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { FiX, FiUploadCloud, FiFile } from 'react-icons/fi'
+import { useQueryClient } from '@tanstack/react-query'
+import { FiX, FiUploadCloud, FiFile, FiLoader } from 'react-icons/fi'
 import Swal from 'sweetalert2'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { useMarcas } from '@/hooks/useProductos'
-import { useInsertarVenta, useEditarVenta } from '@/hooks/useVentas'
-import { uploadFactura } from '@/services/ventasService'
+import { useEditarVenta } from '@/hooks/useVentas'
+import { uploadFactura, insertarVenta, insertarProductosVenta } from '@/services/ventasService'
+import { parsearPdf } from '@/utils/parsearPdf'
 import type { Venta, VentaFormValues, UploadType, FacturaParseada } from '@/types/ventas'
 
 interface Props {
   ventaEditar?: Venta
   onClose: () => void
-  // lo llena el parser cuando está disponible (commits de parsers)
-  dadosParseados?: FacturaParseada | null
 }
 
 const MIME_VALIDOS = [
@@ -22,20 +22,23 @@ const MIME_VALIDOS = [
   'application/vnd.ms-excel',
 ]
 
-export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
+export function FormVenta({ ventaEditar, onClose }: Props) {
   const { t } = useTranslation()
+  const qc = useQueryClient()
   const esEdicion = !!ventaEditar
   const { data: marcas = [] } = useMarcas()
 
   const [uploadType, setUploadType] = useState<UploadType>('pdf')
   const [archivo, setArchivo] = useState<File | null>(null)
-  const [subiendo, setSubiendo] = useState(false)
+  const [parsando, setParsando] = useState(false)
+  const [enviando, setEnviando] = useState(false)
   const [arrastrando, setArrastrando] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  // productos extraídos del parser — se insertan en detalle_ventas al confirmar
+  const productosParsed = useRef<FacturaParseada['productos']>([])
 
-  const { mutate: insertar, isPending: insertando } = useInsertarVenta(onClose)
   const { mutate: editar, isPending: editando } = useEditarVenta(onClose)
-  const isPending = insertando || editando || subiendo
+  const isPending = editando || enviando
 
   const {
     register,
@@ -45,7 +48,6 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
     formState: { errors },
   } = useForm<VentaFormValues>()
 
-  // pre-llenar al editar
   useEffect(() => {
     if (ventaEditar) {
       reset({
@@ -58,22 +60,21 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
     }
   }, [ventaEditar, reset])
 
-  // auto-llenar campos cuando el parser devuelve datos
-  useEffect(() => {
-    if (!dadosParseados) return
-    if (dadosParseados.pedidoNo) setValue('codigo', dadosParseados.pedidoNo)
-    if (dadosParseados.fecha) setValue('fecha', dadosParseados.fecha)
-    if (dadosParseados.cantidadProductos !== null)
-      setValue('cantidad_productos', String(dadosParseados.cantidadProductos))
-    if (dadosParseados.cantidadTotal !== null)
-      setValue('cantidad_total', String(dadosParseados.cantidadTotal))
-    if (dadosParseados.marca && marcas.length > 0) {
+  function autoFill(datos: FacturaParseada) {
+    if (datos.pedidoNo) setValue('codigo', datos.pedidoNo)
+    if (datos.fecha) setValue('fecha', datos.fecha)
+    if (datos.cantidadProductos !== null)
+      setValue('cantidad_productos', String(datos.cantidadProductos))
+    if (datos.cantidadTotal !== null)
+      setValue('cantidad_total', String(datos.cantidadTotal))
+    if (datos.marca && marcas.length > 0) {
       const encontrada = marcas.find(m =>
-        m.nombre.toLowerCase().includes(dadosParseados.marca!.toLowerCase())
+        m.nombre.toLowerCase().includes(datos.marca!.toLowerCase())
       )
       if (encontrada) setValue('marca_id', String(encontrada.id))
     }
-  }, [dadosParseados, marcas, setValue])
+    productosParsed.current = datos.productos
+  }
 
   function validarArchivo(file: File): boolean {
     if (!MIME_VALIDOS.includes(file.type)) {
@@ -87,9 +88,23 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
     return true
   }
 
-  function manejarArchivo(file: File) {
+  async function manejarArchivo(file: File) {
     if (!validarArchivo(file)) return
     setArchivo(file)
+    productosParsed.current = []
+
+    if (uploadType === 'pdf' && file.type === 'application/pdf') {
+      setParsando(true)
+      try {
+        const datos = await parsearPdf(file)
+        if (datos) autoFill(datos)
+      } catch (err) {
+        console.error('Error al parsear PDF:', err)
+      } finally {
+        setParsando(false)
+      }
+    }
+    // Excel parser se conecta en el siguiente commit
   }
 
   function onDrop(e: React.DragEvent) {
@@ -105,21 +120,40 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
       return
     }
 
-    let facturaPath: string | null = null
-
-    if (archivo) {
-      setSubiendo(true)
-      try {
+    setEnviando(true)
+    try {
+      // 1. subir archivo si existe
+      let facturaPath: string | null = null
+      if (archivo) {
         facturaPath = await uploadFactura(archivo)
-      } catch (err) {
-        setSubiendo(false)
-        Swal.fire({ icon: 'error', title: 'Error al subir factura', text: (err as Error).message })
-        return
       }
-      setSubiendo(false)
-    }
 
-    insertar({ values, facturaPath })
+      // 2. insertar venta → obtener el id
+      const ventaId = await insertarVenta(values, facturaPath)
+
+      // 3. insertar productos extraídos del parser (si los hay)
+      let resultado: { insertados: number; omitidos: number } | null = null
+      if (productosParsed.current.length > 0) {
+        resultado = await insertarProductosVenta(ventaId, productosParsed.current)
+      }
+
+      qc.invalidateQueries({ queryKey: ['ventas'] })
+
+      const extra = resultado?.omitidos
+        ? ` (${resultado.omitidos} ${t('ventas.omitidos')})`
+        : ''
+      Swal.fire({
+        icon: 'success',
+        title: `¡Venta registrada!${extra}`,
+        timer: 2000,
+        showConfirmButton: false,
+      })
+      onClose()
+    } catch (err) {
+      Swal.fire({ icon: 'error', title: 'Error', text: (err as Error).message })
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -134,14 +168,13 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Body>
-            {/* selector de archivo — solo al crear */}
             {!esEdicion && (
               <>
                 <TypeSelector>
                   <TypeBtn
                     type="button"
                     $activo={uploadType === 'pdf'}
-                    onClick={() => { setUploadType('pdf'); setArchivo(null) }}
+                    onClick={() => { setUploadType('pdf'); setArchivo(null); productosParsed.current = [] }}
                   >
                     {t('ventas.tipo_pdf')}
                   </TypeBtn>
@@ -149,7 +182,7 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
                     type="button"
                     $activo={uploadType === 'excel'}
                     $excel
-                    onClick={() => { setUploadType('excel'); setArchivo(null) }}
+                    onClick={() => { setUploadType('excel'); setArchivo(null); productosParsed.current = [] }}
                   >
                     {t('ventas.tipo_excel')}
                   </TypeBtn>
@@ -172,13 +205,25 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
                       if (f) manejarArchivo(f)
                     }}
                   />
-                  {archivo ? (
+                  {parsando ? (
+                    <DropHint>
+                      <SpinIcon><FiLoader size={22} /></SpinIcon>
+                      <span>Analizando archivo...</span>
+                    </DropHint>
+                  ) : archivo ? (
                     <ArchivoInfo>
                       <FiFile size={20} />
                       <span>{archivo.name}</span>
+                      {productosParsed.current.length > 0 && (
+                        <Badge>{productosParsed.current.length} productos</Badge>
+                      )}
                       <RemoveBtn
                         type="button"
-                        onClick={e => { e.stopPropagation(); setArchivo(null) }}
+                        onClick={e => {
+                          e.stopPropagation()
+                          setArchivo(null)
+                          productosParsed.current = []
+                        }}
                       >
                         <FiX size={14} />
                       </RemoveBtn>
@@ -187,16 +232,13 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
                     <DropHint>
                       <FiUploadCloud size={24} />
                       <span>{t('common.cargar')}</span>
-                      <small>
-                        {uploadType === 'pdf' ? 'PDF' : 'Excel'} — máx 10 MB
-                      </small>
+                      <small>{uploadType === 'pdf' ? 'PDF' : 'Excel'} — máx 10 MB</small>
                     </DropHint>
                   )}
                 </DropZone>
               </>
             )}
 
-            {/* campos del formulario */}
             <Fields>
               <Field>
                 <label>{t('ventas.codigo')} *</label>
@@ -213,9 +255,7 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
                 <select {...register('marca_id')} disabled={isPending}>
                   <option value="">{t('productos.todas_marcas')}</option>
                   {marcas.map(m => (
-                    <option key={m.id} value={m.id}>
-                      {m.nombre}
-                    </option>
+                    <option key={m.id} value={m.id}>{m.nombre}</option>
                   ))}
                 </select>
               </Field>
@@ -236,7 +276,6 @@ export function FormVenta({ ventaEditar, onClose, dadosParseados }: Props) {
                     disabled={isPending}
                   />
                 </Field>
-
                 <Field>
                   <label>{t('ventas.cantidad_total')}</label>
                   <input
@@ -316,7 +355,6 @@ const CloseBtn = styled.button`
   padding: 4px;
   border-radius: 6px;
   transition: color 0.15s;
-
   &:hover { color: ${({ theme }) => theme.text}; }
 `
 
@@ -355,7 +393,6 @@ const DropZone = styled.div<{ $activo: boolean }>`
   cursor: pointer;
   background: ${({ $activo, theme }) => ($activo ? `${theme.primary}0a` : theme.bg)};
   transition: all 0.15s;
-
   &:hover {
     border-color: ${({ theme }) => theme.primary};
     background: ${({ theme }) => `${theme.primary}08`};
@@ -369,8 +406,18 @@ const DropHint = styled.div`
   gap: 0.25rem;
   color: ${({ theme }) => theme.textMuted};
   font-size: 0.875rem;
-
   small { font-size: 0.75rem; }
+`
+
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`
+
+const SpinIcon = styled.span`
+  display: inline-flex;
+  animation: ${spin} 0.8s linear infinite;
+  color: ${({ theme }) => theme.primary};
 `
 
 const ArchivoInfo = styled.div`
@@ -379,13 +426,23 @@ const ArchivoInfo = styled.div`
   gap: 0.5rem;
   color: ${({ theme }) => theme.text};
   font-size: 0.875rem;
-
   span {
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+`
+
+const Badge = styled.span`
+  background: ${({ theme }) => `${theme.success}20`};
+  color: ${({ theme }) => theme.success};
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
 `
 
 const RemoveBtn = styled.button`
@@ -428,7 +485,6 @@ const Field = styled.div`
     outline: none;
     transition: border-color 0.15s;
     width: 100%;
-
     &:focus { border-color: ${({ theme }) => theme.inputFocus}; }
     &:disabled { opacity: 0.6; cursor: not-allowed; }
   }
@@ -463,7 +519,6 @@ const CancelBtn = styled.button`
   font-size: 0.875rem;
   cursor: pointer;
   transition: background 0.15s;
-
   &:hover:not(:disabled) { background: ${({ theme }) => theme.surfaceHover}; }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `
@@ -479,7 +534,6 @@ const SaveBtn = styled.button`
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
-
   &:hover:not(:disabled) { background: ${({ theme }) => theme.primaryHover}; }
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 `
