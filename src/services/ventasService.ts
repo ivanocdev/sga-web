@@ -71,7 +71,7 @@ export async function fetchEquipoVenta(ventaId: number) {
     id: number
     usuario: string | null
     estado: EstadoVenta
-    usuarios: { id: number; nombres: string } | null
+    usuarios: { id: string; nombre: string } | null
   }
 }
 
