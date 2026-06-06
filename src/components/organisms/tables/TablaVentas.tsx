@@ -8,7 +8,6 @@ import {
   type ColumnDef,
 } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 import { FiEdit2, FiTrash2, FiEye, FiFileText } from 'react-icons/fi'
 import Swal from 'sweetalert2'
 import styled from 'styled-components'
@@ -25,6 +24,7 @@ interface Props {
   data: Venta[]
   isLoading: boolean
   onEditar: (venta: Venta) => void
+  onVerResumen: (venta: Venta) => void
   busqueda: string
 }
 
@@ -52,10 +52,9 @@ function FacturaBtn({ path }: { path: string }) {
   )
 }
 
-export function TablaVentas({ data, isLoading, onEditar, busqueda }: Props) {
+export function TablaVentas({ data, isLoading, onEditar, onVerResumen, busqueda }: Props) {
   const { t } = useTranslation()
   const { usuario } = useAuth()
-  const navigate = useNavigate()
   const { filtros, setFiltros } = useVentasStore()
   const { mutate: eliminar, isPending: eliminando } = useEliminarVenta()
 
@@ -159,7 +158,7 @@ export function TablaVentas({ data, isLoading, onEditar, busqueda }: Props) {
           return (
             <Acciones>
               <IconBtn
-                onClick={() => navigate(`/ventas/${v.id}/productos`)}
+                onClick={() => onVerResumen(v)}
                 title={t('common.ver_detalle')}
               >
                 <FiEye />
@@ -184,7 +183,7 @@ export function TablaVentas({ data, isLoading, onEditar, busqueda }: Props) {
         },
       },
     ],
-    [t, esAdmin, navigate, onEditar, handleEliminar, eliminando]
+    [t, esAdmin, onVerResumen, onEditar, handleEliminar, eliminando]
   )
 
   const table = useReactTable({
@@ -253,7 +252,7 @@ export function TablaVentas({ data, isLoading, onEditar, busqueda }: Props) {
               const v = row.original
               const esDevolucion = v.estado === 'Devolucion'
               return (
-                <MobileCard key={v.id} onClick={() => navigate(`/ventas/${v.id}/productos`)}>
+                <MobileCard key={v.id} onClick={() => onVerResumen(v)}>
                   <CardHeader>
                     <div>
                       <span className="codigo">{v.codigo}</span>
