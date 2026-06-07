@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { FiUsers, FiPlus } from 'react-icons/fi'
 import { TablaUsuarios } from '@/components/organisms/tables/TablaUsuarios'
 import { FormRegistrarUsuario } from '@/components/organisms/forms/FormRegistrarUsuario'
+import { FormEditarUsuario } from '@/components/organisms/forms/FormEditarUsuario'
 import { SearchInput } from '@/components/atoms/SearchInput'
 import { useUsuarios } from '@/hooks/useUsuarios'
 import { bp } from '@/styles/breakpoints'
@@ -13,7 +14,8 @@ export default function Usuarios() {
   const { t } = useTranslation()
   const { data = [], isLoading } = useUsuarios()
   const [busqueda, setBusqueda] = useState('')
-  const [formOpen, setFormOpen] = useState(false)
+  const [formNuevoOpen, setFormNuevoOpen] = useState(false)
+  const [usuarioEditar, setUsuarioEditar] = useState<Usuario | undefined>()
 
   const filtrados = useMemo<Usuario[]>(() => {
     if (!busqueda.trim()) return data
@@ -25,9 +27,18 @@ export default function Usuarios() {
 
   const handleSearch = useCallback((v: string) => setBusqueda(v), [])
 
+  function handleEditar(usuario: Usuario) {
+    setUsuarioEditar(usuario)
+  }
+
+  function handleCerrarEditar() {
+    setUsuarioEditar(undefined)
+  }
+
   return (
     <Container>
-      {formOpen && <FormRegistrarUsuario onClose={() => setFormOpen(false)} />}
+      {formNuevoOpen && <FormRegistrarUsuario onClose={() => setFormNuevoOpen(false)} />}
+      {usuarioEditar && <FormEditarUsuario usuario={usuarioEditar} onClose={handleCerrarEditar} />}
 
       <Header>
         <TitleRow>
@@ -36,7 +47,7 @@ export default function Usuarios() {
         </TitleRow>
         <Controls>
           <SearchInput onSearch={handleSearch} placeholder={`${t('common.buscar')}...`} />
-          <NuevoBtn onClick={() => setFormOpen(true)}>
+          <NuevoBtn onClick={() => setFormNuevoOpen(true)}>
             <FiPlus size={15} />
             {t('usuarios.agregar')}
           </NuevoBtn>
@@ -44,7 +55,7 @@ export default function Usuarios() {
       </Header>
 
       <Content>
-        <TablaUsuarios data={filtrados} isLoading={isLoading} />
+        <TablaUsuarios data={filtrados} isLoading={isLoading} onEditar={handleEditar} />
       </Content>
     </Container>
   )
