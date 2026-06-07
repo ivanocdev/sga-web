@@ -1,8 +1,9 @@
 import { useMemo, useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { FiUsers } from 'react-icons/fi'
+import { FiUsers, FiPlus } from 'react-icons/fi'
 import { TablaUsuarios } from '@/components/organisms/tables/TablaUsuarios'
+import { FormRegistrarUsuario } from '@/components/organisms/forms/FormRegistrarUsuario'
 import { SearchInput } from '@/components/atoms/SearchInput'
 import { useUsuarios } from '@/hooks/useUsuarios'
 import { bp } from '@/styles/breakpoints'
@@ -12,8 +13,8 @@ export default function Usuarios() {
   const { t } = useTranslation()
   const { data = [], isLoading } = useUsuarios()
   const [busqueda, setBusqueda] = useState('')
+  const [formOpen, setFormOpen] = useState(false)
 
-  // filtro cliente — lista de usuarios suele ser pequeña, sin necesidad de query server-side
   const filtrados = useMemo<Usuario[]>(() => {
     if (!busqueda.trim()) return data
     const q = busqueda.toLowerCase()
@@ -26,6 +27,8 @@ export default function Usuarios() {
 
   return (
     <Container>
+      {formOpen && <FormRegistrarUsuario onClose={() => setFormOpen(false)} />}
+
       <Header>
         <TitleRow>
           <FiUsers size={22} />
@@ -33,6 +36,10 @@ export default function Usuarios() {
         </TitleRow>
         <Controls>
           <SearchInput onSearch={handleSearch} placeholder={`${t('common.buscar')}...`} />
+          <NuevoBtn onClick={() => setFormOpen(true)}>
+            <FiPlus size={15} />
+            {t('usuarios.agregar')}
+          </NuevoBtn>
         </Controls>
       </Header>
 
@@ -88,6 +95,26 @@ const Controls = styled.div`
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+`
+
+const NuevoBtn = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: ${({ theme }) => theme.primary};
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+
+  &:hover {
+    background: ${({ theme }) => theme.primaryHover};
+  }
 `
 
 const Content = styled.div`

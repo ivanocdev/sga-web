@@ -38,3 +38,13 @@ export async function eliminarUsuario(id: string): Promise<void> {
   const { error } = await supabase.from('usuarios').delete().eq('id', id)
   if (error) throw error
 }
+
+export async function invokeCrearUsuario(values: {
+  nombre: string
+  correo: string
+  password: string
+  rol: string
+}): Promise<void> {
+  const { error } = await supabase.functions.invoke('crear-usuario', { body: values })
+  if (error) throw error
+}

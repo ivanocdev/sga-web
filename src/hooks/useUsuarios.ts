@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Swal from 'sweetalert2'
-import { fetchTodosUsuarios, editarUsuario, eliminarUsuario } from '@/services/usuariosService'
-import type { UsuarioEditValues } from '@/types/usuarios'
+import { fetchTodosUsuarios, editarUsuario, eliminarUsuario, invokeCrearUsuario } from '@/services/usuariosService'
+import type { UsuarioEditValues, UsuarioRegistroValues } from '@/types/usuarios'
 
 export const USUARIOS_QK = ['usuarios']
 
@@ -20,6 +20,20 @@ export function useEliminarUsuario() {
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: USUARIOS_QK })
       void Swal.fire({ icon: 'success', title: 'Usuario eliminado', timer: 1800, showConfirmButton: false })
+    },
+    onError: (err: Error) => {
+      void Swal.fire({ icon: 'error', title: 'Error', text: err.message })
+    },
+  })
+}
+
+export function useCrearUsuario() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (values: UsuarioRegistroValues) => invokeCrearUsuario(values),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: USUARIOS_QK })
+      void Swal.fire({ icon: 'success', title: '¡Usuario creado!', timer: 1800, showConfirmButton: false })
     },
     onError: (err: Error) => {
       void Swal.fire({ icon: 'error', title: 'Error', text: err.message })
