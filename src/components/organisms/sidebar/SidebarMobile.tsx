@@ -15,6 +15,7 @@ import {
 } from 'react-icons/md'
 import { useAuth } from '@/context/AuthContext'
 import { useUiStore } from '@/store/uiStore'
+import { useModulos } from '@/hooks/useModulos'
 
 const DRAWER_W = 280
 
@@ -40,6 +41,7 @@ export default function SidebarMobile() {
   const { t } = useTranslation()
   const { usuario, signOut } = useAuth()
   const { drawerMobile, setDrawer } = useUiStore()
+  const { data: modulos = [] } = useModulos()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -61,8 +63,13 @@ export default function SidebarMobile() {
     navigate('/login')
   }
 
-  const items = NAV_ITEMS.filter(
-    (item) => !item.adminOnly || usuario?.rol === 'admin'
+  const activosPaths = modulos.length > 0
+    ? new Set(modulos.filter(m => m.activo).map(m => m.link))
+    : null
+
+  const items = NAV_ITEMS.filter(item =>
+    (!item.adminOnly || usuario?.rol === 'admin') &&
+    (activosPaths === null || activosPaths.has(item.path))
   )
 
   return (

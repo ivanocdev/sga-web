@@ -4,14 +4,18 @@ import { useTranslation } from 'react-i18next'
 import { FiSettings, FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi'
 import { FormMarca } from '@/components/organisms/forms/FormMarca'
 import { CardCuenta } from '@/components/organisms/cards/CardCuenta'
+import { CardModulos } from '@/components/organisms/cards/CardModulos'
 import { useMarcas } from '@/hooks/useProductos'
 import { useEliminarMarca } from '@/hooks/useMarcas'
+import { useAuth } from '@/context/AuthContext'
 import { bp } from '@/styles/breakpoints'
 import Swal from 'sweetalert2'
 import type { Marca } from '@/types/productos'
 
 export default function Configuracion() {
   const { t } = useTranslation()
+  const { usuario } = useAuth()
+  const esAdmin = usuario?.rol === 'admin'
   const { data: marcas = [], isLoading: cargandoMarcas } = useMarcas()
   const { mutate: eliminarMarca } = useEliminarMarca()
   const [formMarca, setFormMarca] = useState<{ open: boolean; marca?: Marca }>({ open: false })
@@ -93,7 +97,8 @@ export default function Configuracion() {
         {/* ── Mi cuenta ── */}
         <CardCuenta />
 
-        {/* el commit 7 agrega la Card de módulos aquí */}
+        {/* ── Módulos (solo admins) ── */}
+        {esAdmin && <CardModulos />}
       </Grid>
     </Container>
   )

@@ -15,6 +15,7 @@ import {
 } from 'react-icons/md'
 import { useAuth } from '@/context/AuthContext'
 import { useUiStore } from '@/store/uiStore'
+import { useModulos } from '@/hooks/useModulos'
 import { bp } from '@/styles/breakpoints'
 import ThemeToggle from '@/components/atoms/ThemeToggle'
 import LanguageToggle from '@/components/atoms/LanguageToggle'
@@ -44,6 +45,7 @@ export default function Sidebar() {
   const { t } = useTranslation()
   const { usuario, signOut } = useAuth()
   const { sidebarAbierto, toggleSidebar } = useUiStore()
+  const { data: modulos = [] } = useModulos()
   const navigate = useNavigate()
 
   async function handleSignOut() {
@@ -51,8 +53,14 @@ export default function Sidebar() {
     navigate('/login')
   }
 
-  const items = NAV_ITEMS.filter(
-    (item) => !item.adminOnly || usuario?.rol === 'admin'
+  // si modulos aún no cargó mostramos todo (evita sidebar vacío en el primer render)
+  const activosPaths = modulos.length > 0
+    ? new Set(modulos.filter(m => m.activo).map(m => m.link))
+    : null
+
+  const items = NAV_ITEMS.filter(item =>
+    (!item.adminOnly || usuario?.rol === 'admin') &&
+    (activosPaths === null || activosPaths.has(item.path))
   )
 
   return (
