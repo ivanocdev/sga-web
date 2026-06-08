@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { FiSettings, FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi'
 import { FormMarca } from '@/components/organisms/forms/FormMarca'
+import { CardCuenta } from '@/components/organisms/cards/CardCuenta'
 import { useMarcas } from '@/hooks/useProductos'
 import { useEliminarMarca } from '@/hooks/useMarcas'
 import { bp } from '@/styles/breakpoints'
@@ -89,7 +90,10 @@ export default function Configuracion() {
           </CardBody>
         </Card>
 
-        {/* los commits 6 y 7 agregan más Cards aquí */}
+        {/* ── Mi cuenta ── */}
+        <CardCuenta />
+
+        {/* el commit 7 agrega la Card de módulos aquí */}
       </Grid>
     </Container>
   )

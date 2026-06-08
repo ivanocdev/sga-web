@@ -9,6 +9,7 @@ interface AuthContextValue {
   loading: boolean
   signIn: (correo: string, contrasena: string) => Promise<void>
   signOut: () => Promise<void>
+  recargarUsuario: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -58,8 +59,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut()
   }
 
+  // útil después de editar el propio perfil (nombre) para que el sidebar se actualice
+  async function recargarUsuario() {
+    const { data: { session: s } } = await supabase.auth.getSession()
+    if (s) await cargarUsuario(s.user.id)
+  }
+
   return (
-    <AuthContext.Provider value={{ session, usuario, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ session, usuario, loading, signIn, signOut, recargarUsuario }}>
       {children}
     </AuthContext.Provider>
   )
