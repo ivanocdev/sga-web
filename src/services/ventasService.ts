@@ -75,9 +75,24 @@ export async function fetchEquipoVenta(ventaId: number) {
   }
 }
 
+const TIPOS_PERMITIDOS = [
+  'application/pdf',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+]
+const TAMANO_MAXIMO = 10 * 1024 * 1024 // 10 MB
+
 // sube el archivo al bucket 'facturas' (privado)
 // devuelve la ruta relativa, no la URL pública — el bucket es privado
 export async function uploadFactura(archivo: File): Promise<string> {
+  if (!TIPOS_PERMITIDOS.includes(archivo.type)) {
+    throw new Error('Solo se permiten archivos PDF o Excel (.xls, .xlsx).')
+  }
+
+  if (archivo.size > TAMANO_MAXIMO) {
+    throw new Error('El archivo no puede superar los 10 MB.')
+  }
+
   const nombre = archivo.name.replace(/[^a-zA-Z0-9._-]/g, '_')
   const filePath = `${Date.now()}_${nombre}`
 
