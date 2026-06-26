@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { FiX } from 'react-icons/fi'
 import { useEditarUsuario } from '@/hooks/useUsuarios'
+import { reglas } from '@/utils/validaciones'
 import type { Usuario } from '@/types/auth'
 import type { UsuarioEditValues } from '@/types/usuarios'
 
@@ -52,7 +53,7 @@ export function FormEditarUsuario({ usuario, onClose }: Props) {
           <Field>
             <Label>{t('usuarios.nombre')}</Label>
             <Input
-              {...register('nombre', { required: t('errores.requerido') })}
+              {...register('nombre', { required: t('errores.requerido'), ...reglas.nombre })}
               disabled={isPending}
             />
             {errors.nombre && <ErrorMsg>{errors.nombre.message}</ErrorMsg>}

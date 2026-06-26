@@ -6,6 +6,7 @@ import { FiX } from 'react-icons/fi'
 import styled from 'styled-components'
 import { fetchProductoEditable } from '@/services/productosService'
 import { useMarcas, useInsertarProducto, useEditarProducto } from '@/hooks/useProductos'
+import { reglas } from '@/utils/validaciones'
 import type { ProductoFormValues } from '@/types/productos'
 
 interface Props {
@@ -75,7 +76,7 @@ export function FormProducto({ productoId, onClose }: Props) {
               <Field>
                 <label>Código *</label>
                 <input
-                  {...register('codigo', { required: t('errores.requerido') })}
+                  {...register('codigo', { required: t('errores.requerido'), ...reglas.codigoNumerico })}
                   placeholder="ej. 12345"
                   disabled={isPending}
                 />
@@ -85,7 +86,7 @@ export function FormProducto({ productoId, onClose }: Props) {
               <Field>
                 <label>{t('productos.nombre')} *</label>
                 <input
-                  {...register('nombre', { required: t('errores.requerido') })}
+                  {...register('nombre', { required: t('errores.requerido'), ...reglas.nombre })}
                   placeholder="ej. Jugo de naranja 1L"
                   disabled={isPending}
                 />

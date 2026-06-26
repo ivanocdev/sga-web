@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { FiX } from 'react-icons/fi'
 import { useCrearUsuario } from '@/hooks/useUsuarios'
+import { reglas } from '@/utils/validaciones'
 import type { UsuarioRegistroValues } from '@/types/usuarios'
 
 interface Props {
@@ -37,7 +38,7 @@ export function FormRegistrarUsuario({ onClose }: Props) {
           <Field>
             <Label>{t('usuarios.nombre')}</Label>
             <Input
-              {...register('nombre', { required: t('errores.requerido') })}
+              {...register('nombre', { required: t('errores.requerido'), ...reglas.nombre })}
               placeholder="Nombre completo"
               disabled={isPending}
             />
@@ -50,7 +51,7 @@ export function FormRegistrarUsuario({ onClose }: Props) {
               type="email"
               {...register('correo', {
                 required: t('errores.requerido'),
-                pattern: { value: /^\S+@\S+\.\S+$/, message: t('errores.formato_correo') },
+                ...reglas.correo,
               })}
               placeholder="correo@ejemplo.com"
               disabled={isPending}
@@ -64,7 +65,7 @@ export function FormRegistrarUsuario({ onClose }: Props) {
               type="password"
               {...register('password', {
                 required: t('errores.requerido'),
-                minLength: { value: 8, message: t('errores.contrasena_corta') },
+                ...reglas.password,
               })}
               placeholder="Mínimo 8 caracteres"
               disabled={isPending}

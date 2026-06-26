@@ -10,6 +10,7 @@ import { useEditarVenta } from '@/hooks/useVentas'
 import { uploadFactura, insertarVenta, insertarProductosVenta } from '@/services/ventasService'
 import { parsearPdf } from '@/utils/parsearPdf'
 import { parsearExcel } from '@/utils/parsearExcel'
+import { reglas } from '@/utils/validaciones'
 import type { Venta, VentaFormValues, UploadType, FacturaParseada } from '@/types/ventas'
 
 interface Props {
@@ -249,7 +250,7 @@ export function FormVenta({ ventaEditar, onClose }: Props) {
               <Field>
                 <label>{t('ventas.codigo')} *</label>
                 <input
-                  {...register('codigo', { required: t('errores.requerido') })}
+                  {...register('codigo', { required: t('errores.requerido'), ...reglas.codigoTexto })}
                   placeholder="ej. PED-2024-001"
                   disabled={isPending}
                 />
