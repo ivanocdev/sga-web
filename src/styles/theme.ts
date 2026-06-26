@@ -25,56 +25,62 @@ export interface Theme {
   // sombras
   shadow: string
   shadowCard: string
+  // sombra diagonal del diseño original: izquierda/arriba + derecha/abajo
+  cardShadow: string
 }
 
 export const lightTheme: Theme = {
-  bg: '#f1f5f9',
+  bg: '#f7f9fd',            // bgtotalFuerte del original
   surface: '#ffffff',
-  surfaceHover: '#f8fafc',
-  border: '#e2e8f0',
+  surfaceHover: '#f2f2f2',
+  border: '#eaeaea',        // bg4 del original
   text: '#0f172a',
-  textMuted: '#64748b',
-  primary: '#2563eb',
-  primaryHover: '#1d4ed8',
-  primaryLight: 'rgba(37, 99, 235, 0.1)',
-  danger: '#dc2626',
-  success: '#16a34a',
+  textMuted: '#667085',     // textsecundario del original
+  primary: '#2264E5',       // colorBotones del original
+  primaryHover: '#023E8A',  // colorPrincipal del original
+  primaryLight: 'rgba(34, 100, 229, 0.1)',
+  danger: '#F54E41',        // colorError del original
+  success: '#9046FF',       // colorExito del original — morado, no verde
   warning: '#d97706',
-  sidebar: '#1e293b',
-  sidebarHover: 'rgba(255, 255, 255, 0.07)',
-  sidebarActive: 'rgba(255, 255, 255, 0.12)',
-  sidebarText: '#94a3b8',
-  sidebarTextActive: '#f1f5f9',
-  sidebarBorder: 'rgba(255, 255, 255, 0.06)',
+  // sidebar azul navy en light para que coincida con el color de marca
+  sidebar: '#023E8A',
+  sidebarHover: 'rgba(255, 255, 255, 0.1)',
+  sidebarActive: 'rgba(255, 255, 255, 0.18)',
+  sidebarText: 'rgba(255, 255, 255, 0.65)',
+  sidebarTextActive: '#ffffff',
+  sidebarBorder: 'rgba(255, 255, 255, 0.12)',
   inputBg: '#ffffff',
-  inputBorder: '#cbd5e1',
-  inputFocus: '#2563eb',
+  inputBorder: '#9b9b9b',   // color del underline en el original
+  inputFocus: '#2264E5',
   shadow: '0 1px 3px rgba(0,0,0,0.08)',
-  shadowCard: '0 2px 8px rgba(0,0,0,0.08)',
+  shadowCard: '-4px 0px 4px -2px rgba(0,0,0,0.25), 2px 2px 4px 0px rgba(0,0,0,0.25)',
+  cardShadow: '-4px 0px 4px -2px rgba(0,0,0,0.25), 2px 2px 4px 0px rgba(0,0,0,0.25)',
 }
 
 export const darkTheme: Theme = {
-  bg: '#0f172a',
-  surface: '#1e293b',
-  surfaceHover: '#263246',
-  border: '#334155',
-  text: '#f1f5f9',
-  textMuted: '#94a3b8',
-  primary: '#3b82f6',
-  primaryHover: '#2563eb',
-  primaryLight: 'rgba(59, 130, 246, 0.15)',
-  danger: '#ef4444',
-  success: '#22c55e',
+  bg: '#131F24',            // bgtotal del original — el teal-navy signature
+  surface: '#171717',       // bgcards del original
+  surfaceHover: '#2C2C2E',  // bg3 del original
+  border: '#37464F',        // color2 del original
+  text: '#ffffff',
+  textMuted: '#8C9298',     // colortitlecard del original
+  primary: '#2264E5',
+  primaryHover: '#023E8A',
+  primaryLight: 'rgba(34, 100, 229, 0.15)',
+  danger: '#F54E41',
+  success: '#9046FF',
   warning: '#f59e0b',
-  sidebar: '#0f172a',
+  // ligeramente más oscuro que bg para crear profundidad sutil
+  sidebar: '#0e161a',       // bgtotalFuerte del original
   sidebarHover: 'rgba(255, 255, 255, 0.06)',
   sidebarActive: 'rgba(255, 255, 255, 0.1)',
-  sidebarText: '#64748b',
-  sidebarTextActive: '#f1f5f9',
+  sidebarText: '#667085',
+  sidebarTextActive: '#ffffff',
   sidebarBorder: 'rgba(255, 255, 255, 0.05)',
-  inputBg: '#1e293b',
-  inputBorder: '#334155',
-  inputFocus: '#3b82f6',
+  inputBg: 'transparent',
+  inputBorder: '#667085',
+  inputFocus: '#2264E5',
   shadow: '0 1px 3px rgba(0,0,0,0.3)',
-  shadowCard: '0 2px 8px rgba(0,0,0,0.3)',
+  shadowCard: '-4px 0px 4px -2px rgba(0,0,0,0.45), 2px 2px 4px 0px rgba(0,0,0,0.45)',
+  cardShadow: '-4px 0px 4px -2px rgba(0,0,0,0.45), 2px 2px 4px 0px rgba(0,0,0,0.45)',
 }
