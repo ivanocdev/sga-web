@@ -45,7 +45,6 @@ export default function ProductosVenta() {
         )}
       </Header>
 
-      {/* info del equipo asignado — read-only en este commit, botón de asignar llega en el siguiente */}
       <EquipoCard>
         <EquipoItem>
           <span className="label">{t('ventas.responsable')}</span>
