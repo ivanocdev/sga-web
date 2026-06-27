@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 import { MdMenu } from 'react-icons/md'
 import { useUiStore } from '@/store/uiStore'
-import Sidebar, { SIDEBAR_W_OPEN, SIDEBAR_W_CLOSED } from '@/components/organisms/sidebar/Sidebar'
+import Sidebar, { SIDEBAR_OFFSET_OPEN, SIDEBAR_OFFSET_CLOSED } from '@/components/organisms/sidebar/Sidebar'
 import SidebarMobile from '@/components/organisms/sidebar/SidebarMobile'
 import ThemeToggle from '@/components/atoms/ThemeToggle'
 import LanguageToggle from '@/components/atoms/LanguageToggle'
@@ -102,9 +102,9 @@ const TopBarRight = styled.div`
 const Main = styled.main<{ $open: boolean }>`
   flex: 1;
   min-width: 0;
-  margin-left: ${({ $open }) => ($open ? SIDEBAR_W_OPEN : SIDEBAR_W_CLOSED)}px;
+  margin-left: ${({ $open }) => ($open ? SIDEBAR_OFFSET_OPEN : SIDEBAR_OFFSET_CLOSED)}px;
   padding: 1.5rem;
-  transition: margin-left 0.25s ease;
+  transition: margin-left 0.3s ease;
 
   @media ${bp.maxMd} {
     margin-left: 0;

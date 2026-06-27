@@ -214,11 +214,12 @@ const Item = styled(NavLink)`
   align-items: center;
   gap: 0.875rem;
   padding: 0.75rem 1.25rem;
-  margin: 0.125rem 0.5rem;
-  border-radius: 8px;
+  margin: 0.125rem 0.75rem;
+  border-radius: 25px;
   color: ${({ theme }) => theme.sidebarText};
   font-size: 0.9375rem;
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
   transition: background 0.15s, color 0.15s;
 
   &:hover {
@@ -261,14 +262,15 @@ const LogoutBtn = styled.button`
   align-items: center;
   gap: 0.875rem;
   padding: 0.75rem 1.25rem;
-  margin: 0 0.5rem;
-  border-radius: 8px;
+  margin: 0 0.75rem;
+  border-radius: 25px;
   background: transparent;
   border: none;
   color: ${({ theme }) => theme.sidebarText};
   font-size: 0.9375rem;
-  font-weight: 500;
-  width: calc(100% - 1rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  width: calc(100% - 1.5rem);
   transition: background 0.15s, color 0.15s;
 
   &:hover {

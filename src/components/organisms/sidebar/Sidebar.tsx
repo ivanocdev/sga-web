@@ -22,6 +22,10 @@ import LanguageToggle from '@/components/atoms/LanguageToggle'
 
 export const SIDEBAR_W_OPEN = 240
 export const SIDEBAR_W_CLOSED = 64
+const SIDEBAR_PADDING = 16
+// ancho total incluyendo el padding del wrapper flotante
+export const SIDEBAR_OFFSET_OPEN = SIDEBAR_W_OPEN + SIDEBAR_PADDING * 2
+export const SIDEBAR_OFFSET_CLOSED = SIDEBAR_W_CLOSED + SIDEBAR_PADDING * 2
 
 interface NavItem {
   key: string
@@ -65,79 +69,100 @@ export default function Sidebar() {
 
   return (
     <Nav $open={sidebarAbierto}>
-      <LogoArea>
-        {/* reemplazar por <img src="/sga_logo.svg" /> cuando el usuario suba el archivo */}
-        <LogoMark>SGA</LogoMark>
-        {sidebarAbierto && <LogoText>Almacén</LogoText>}
-      </LogoArea>
+      <SidebarInner>
+        <LogoArea>
+          {/* reemplazar por <img src="/sga_logo.svg" /> cuando el usuario suba el archivo */}
+          <LogoMark>SGA</LogoMark>
+          {sidebarAbierto && <LogoText>Almacén</LogoText>}
+        </LogoArea>
 
-      <ToggleBtn
-        onClick={toggleSidebar}
-        title={sidebarAbierto ? 'Contraer' : 'Expandir'}
-      >
-        {sidebarAbierto ? (
-          <MdChevronLeft size={18} />
-        ) : (
-          <MdChevronRight size={18} />
-        )}
-      </ToggleBtn>
-
-      <NavList>
-        {items.map(({ key, path, icon: Icon, end }) => (
-          <li key={key}>
-            <Item
-              to={path}
-              end={end}
-              title={!sidebarAbierto ? t(`nav.${key}`) : undefined}
-            >
-              <Icon size={20} />
-              {sidebarAbierto && <span>{t(`nav.${key}`)}</span>}
-            </Item>
-          </li>
-        ))}
-      </NavList>
-
-      <Footer>
-        <Controls $open={sidebarAbierto}>
-          <ThemeToggle showLabel={sidebarAbierto} />
-          {sidebarAbierto && <LanguageToggle />}
-        </Controls>
-
-        {sidebarAbierto && usuario && (
-          <UserInfo>
-            <UserName>{usuario.nombre}</UserName>
-            <UserRole>{usuario.rol}</UserRole>
-          </UserInfo>
-        )}
-        <LogoutBtn
-          onClick={handleSignOut}
-          title={!sidebarAbierto ? t('nav.cerrarSesion') : undefined}
+        <ToggleBtn
+          onClick={toggleSidebar}
+          title={sidebarAbierto ? 'Contraer' : 'Expandir'}
         >
-          <MdLogout size={18} />
-          {sidebarAbierto && <span>{t('nav.cerrarSesion')}</span>}
-        </LogoutBtn>
-      </Footer>
+          {sidebarAbierto ? (
+            <MdChevronLeft size={18} />
+          ) : (
+            <MdChevronRight size={18} />
+          )}
+        </ToggleBtn>
+
+        <NavList>
+          {items.map(({ key, path, icon: Icon, end }) => (
+            <li key={key}>
+              <Item
+                to={path}
+                end={end}
+                title={!sidebarAbierto ? t(`nav.${key}`) : undefined}
+              >
+                <Icon size={20} />
+                {sidebarAbierto && <span>{t(`nav.${key}`)}</span>}
+              </Item>
+            </li>
+          ))}
+        </NavList>
+
+        <Footer>
+          <Controls $open={sidebarAbierto}>
+            <ThemeToggle showLabel={sidebarAbierto} />
+            {sidebarAbierto && <LanguageToggle />}
+          </Controls>
+
+          {sidebarAbierto && usuario && (
+            <UserInfo>
+              <UserName>{usuario.nombre}</UserName>
+              <UserRole>{usuario.rol}</UserRole>
+            </UserInfo>
+          )}
+          <LogoutBtn
+            onClick={handleSignOut}
+            title={!sidebarAbierto ? t('nav.cerrarSesion') : undefined}
+          >
+            <MdLogout size={18} />
+            {sidebarAbierto && <span>{t('nav.cerrarSesion')}</span>}
+          </LogoutBtn>
+        </Footer>
+      </SidebarInner>
     </Nav>
   )
 }
 
+// wrapper transparente — solo define el espacio que ocupa el sidebar en el layout
 const Nav = styled.nav<{ $open: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  width: ${({ $open }) => ($open ? SIDEBAR_W_OPEN : SIDEBAR_W_CLOSED)}px;
-  background: ${({ theme }) => theme.sidebar};
-  border-right: 1px solid ${({ theme }) => theme.sidebarBorder};
+  width: ${({ $open }) => ($open ? SIDEBAR_OFFSET_OPEN : SIDEBAR_OFFSET_CLOSED)}px;
+  padding: ${SIDEBAR_PADDING}px;
   display: flex;
-  flex-direction: column;
-  transition: width 0.25s ease;
+  align-items: center;
+  background: transparent;
   z-index: 100;
-  overflow: hidden;
+  transition: width 0.3s ease;
 
-  /* el sidebar mobile se encarga de esto */
   @media ${bp.maxMd} {
     display: none;
+  }
+`
+
+// el sidebar visual flotante con bordes redondeados
+const SidebarInner = styled.div`
+  width: 100%;
+  height: 90vh;
+  background: ${({ theme }) => theme.sidebar};
+  border-radius: 30px;
+  box-shadow: -2px 0px 4px rgba(0, 0, 0, 0.25), 4px 4px 2px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.sidebarBorder};
+    border-radius: 4px;
   }
 `
 
@@ -147,15 +172,14 @@ const LogoArea = styled.div`
   gap: 0.75rem;
   padding: 1.25rem 1rem;
   min-height: 64px;
-  border-bottom: 1px solid ${({ theme }) => theme.sidebarBorder};
   overflow: hidden;
 `
 
 const LogoMark = styled.div`
   width: 36px;
   height: 36px;
-  border-radius: 8px;
-  background: ${({ theme }) => theme.primary};
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
   color: #fff;
   display: flex;
   align-items: center;
@@ -169,8 +193,10 @@ const LogoMark = styled.div`
 const LogoText = styled.span`
   color: ${({ theme }) => theme.sidebarTextActive};
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 `
 
 const ToggleBtn = styled.button`
@@ -179,7 +205,7 @@ const ToggleBtn = styled.button`
   justify-content: center;
   width: 28px;
   height: 28px;
-  margin: 0.75rem auto;
+  margin: 0.5rem auto;
   border-radius: 50%;
   background: ${({ theme }) => theme.sidebarHover};
   border: 1px solid ${({ theme }) => theme.sidebarBorder};
@@ -201,16 +227,18 @@ const NavList = styled.ul`
   overflow-x: hidden;
 `
 
+// border-radius: 25px para el estilo pill del original
 const Item = styled(NavLink)`
   display: flex;
   align-items: center;
   gap: 0.875rem;
   padding: 0.65rem 1rem;
-  margin: 0.125rem 0.5rem;
-  border-radius: 8px;
+  margin: 0.125rem 0.75rem;
+  border-radius: 25px;
   color: ${({ theme }) => theme.sidebarText};
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
   white-space: nowrap;
   transition: background 0.15s, color 0.15s;
 
@@ -234,7 +262,7 @@ const Footer = styled.div`
 `
 
 const UserInfo = styled.div`
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.75rem;
   overflow: hidden;
 `
 
@@ -266,13 +294,15 @@ const LogoutBtn = styled.button`
   align-items: center;
   gap: 0.875rem;
   padding: 0.65rem 1rem;
-  border-radius: 8px;
+  margin: 0 0.75rem;
+  border-radius: 25px;
   background: transparent;
   border: none;
   color: ${({ theme }) => theme.sidebarText};
   font-size: 0.875rem;
-  font-weight: 500;
-  width: 100%;
+  font-weight: 600;
+  text-transform: uppercase;
+  width: calc(100% - 1.5rem);
   white-space: nowrap;
   transition: background 0.15s, color 0.15s;
 
