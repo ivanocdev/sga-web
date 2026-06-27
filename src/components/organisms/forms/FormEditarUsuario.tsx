@@ -7,6 +7,7 @@ import { useEditarUsuario } from '@/hooks/useUsuarios'
 import { reglas } from '@/utils/validaciones'
 import type { Usuario } from '@/types/auth'
 import type { UsuarioEditValues } from '@/types/usuarios'
+import { FloatingInput, FloatingSelect } from '@/components/atoms/FloatingInput'
 
 interface Props {
   usuario: Usuario
@@ -45,28 +46,29 @@ export function FormEditarUsuario({ usuario, onClose }: Props) {
 
         <Form onSubmit={handleSubmit(onSubmit)}>
           {/* correo de referencia — no editable */}
-          <Field>
-            <Label>Correo</Label>
-            <InputReadOnly value={usuario.correo} readOnly />
-          </Field>
+          <FloatingInput
+            label="Correo"
+            value={usuario.correo}
+            readOnly
+            onChange={() => {}}
+          />
 
-          <Field>
-            <Label>{t('usuarios.nombre')}</Label>
-            <Input
-              {...register('nombre', { required: t('errores.requerido'), ...reglas.nombre })}
-              disabled={isPending}
-            />
-            {errors.nombre && <ErrorMsg>{errors.nombre.message}</ErrorMsg>}
-          </Field>
+          <FloatingInput
+            label={t('usuarios.nombre')}
+            {...register('nombre', { required: t('errores.requerido'), ...reglas.nombre })}
+            disabled={isPending}
+            error={errors.nombre?.message}
+          />
 
-          <Field>
-            <Label>{t('usuarios.rol')}</Label>
-            <Select {...register('rol', { required: t('errores.requerido') })} disabled={isPending}>
-              <option value="operador">Operador</option>
-              <option value="admin">Admin</option>
-            </Select>
-            {errors.rol && <ErrorMsg>{errors.rol.message}</ErrorMsg>}
-          </Field>
+          <FloatingSelect
+            label={t('usuarios.rol')}
+            {...register('rol', { required: t('errores.requerido') })}
+            disabled={isPending}
+            error={errors.rol?.message}
+          >
+            <option value="operador">Operador</option>
+            <option value="admin">Admin</option>
+          </FloatingSelect>
 
           <CheckRow>
             <input
@@ -91,8 +93,6 @@ export function FormEditarUsuario({ usuario, onClose }: Props) {
     </Overlay>
   )
 }
-
-// --- estilos ---
 
 const Overlay = styled.div`
   position: fixed;
@@ -154,69 +154,8 @@ const CloseBtn = styled.button`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1.125rem;
+  gap: 1.5rem;
   padding: 1.5rem;
-`
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-`
-
-const Label = styled.label`
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.textMuted};
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-`
-
-const sharedInput = `
-  border-radius: 8px;
-  border: 1px solid;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  outline: none;
-  transition: border-color 0.15s;
-  width: 100%;
-  box-sizing: border-box;
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-`
-
-const Input = styled.input`
-  ${sharedInput}
-  background: ${({ theme }) => theme.inputBg};
-  border-color: ${({ theme }) => theme.inputBorder};
-  color: ${({ theme }) => theme.text};
-
-  &:focus {
-    border-color: ${({ theme }) => theme.inputFocus};
-  }
-`
-
-const InputReadOnly = styled.input`
-  ${sharedInput}
-  background: ${({ theme }) => theme.bg};
-  border-color: ${({ theme }) => theme.border};
-  color: ${({ theme }) => theme.textMuted};
-  cursor: default;
-`
-
-const Select = styled.select`
-  ${sharedInput}
-  background: ${({ theme }) => theme.inputBg};
-  border-color: ${({ theme }) => theme.inputBorder};
-  color: ${({ theme }) => theme.text};
-  cursor: pointer;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.inputFocus};
-  }
 `
 
 const CheckRow = styled.div`
@@ -238,16 +177,11 @@ const CheckLabel = styled.label`
   cursor: pointer;
 `
 
-const ErrorMsg = styled.span`
-  font-size: 0.78rem;
-  color: ${({ theme }) => theme.danger};
-`
-
 const Actions = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  padding-top: 0.5rem;
+  padding-top: 0.25rem;
 `
 
 const CancelBtn = styled.button`

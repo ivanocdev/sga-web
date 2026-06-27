@@ -8,6 +8,7 @@ import { fetchProductoEditable } from '@/services/productosService'
 import { useMarcas, useInsertarProducto, useEditarProducto } from '@/hooks/useProductos'
 import { reglas } from '@/utils/validaciones'
 import type { ProductoFormValues } from '@/types/productos'
+import { FloatingInput, FloatingSelect } from '@/components/atoms/FloatingInput'
 
 interface Props {
   productoId?: number
@@ -73,60 +74,46 @@ export function FormProducto({ productoId, onClose }: Props) {
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <Fields>
-              <Field>
-                <label>Código *</label>
-                <input
-                  {...register('codigo', { required: t('errores.requerido'), ...reglas.codigoNumerico })}
-                  placeholder="ej. 12345"
-                  disabled={isPending}
-                />
-                {errors.codigo && <ErrorMsg>{errors.codigo.message}</ErrorMsg>}
-              </Field>
+              <FloatingInput
+                label="Código *"
+                {...register('codigo', { required: t('errores.requerido'), ...reglas.codigoNumerico })}
+                disabled={isPending}
+                error={errors.codigo?.message}
+              />
 
-              <Field>
-                <label>{t('productos.nombre')} *</label>
-                <input
-                  {...register('nombre', { required: t('errores.requerido'), ...reglas.nombre })}
-                  placeholder="ej. Jugo de naranja 1L"
-                  disabled={isPending}
-                />
-                {errors.nombre && <ErrorMsg>{errors.nombre.message}</ErrorMsg>}
-              </Field>
+              <FloatingInput
+                label={`${t('productos.nombre')} *`}
+                {...register('nombre', { required: t('errores.requerido'), ...reglas.nombre })}
+                disabled={isPending}
+                error={errors.nombre?.message}
+              />
 
-              <Field>
-                <label>{t('productos.marca')}</label>
-                <select {...register('marca_id')} disabled={isPending}>
-                  <option value="">{t('productos.todas_marcas')}</option>
-                  {marcas.map(m => (
-                    <option key={m.id} value={m.id}>
-                      {m.nombre}
-                    </option>
-                  ))}
-                </select>
-              </Field>
+              <FloatingSelect
+                label={t('productos.marca')}
+                {...register('marca_id')}
+                disabled={isPending}
+              >
+                <option value="">{t('productos.todas_marcas')}</option>
+                {marcas.map(m => (
+                  <option key={m.id} value={m.id}>{m.nombre}</option>
+                ))}
+              </FloatingSelect>
 
               <TwoCol>
-                <Field>
-                  <label>Cajas / tarima</label>
-                  <input
-                    type="number"
-                    min="0"
-                    {...register('cajas_por_tarima')}
-                    placeholder="0"
-                    disabled={isPending}
-                  />
-                </Field>
-
-                <Field>
-                  <label>Cantidad</label>
-                  <input
-                    type="number"
-                    min="0"
-                    {...register('cantidad')}
-                    placeholder="0"
-                    disabled={isPending}
-                  />
-                </Field>
+                <FloatingInput
+                  label="Cajas / tarima"
+                  type="number"
+                  min="0"
+                  {...register('cajas_por_tarima')}
+                  disabled={isPending}
+                />
+                <FloatingInput
+                  label="Cantidad"
+                  type="number"
+                  min="0"
+                  {...register('cantidad')}
+                  disabled={isPending}
+                />
               </TwoCol>
             </Fields>
 
@@ -205,55 +192,14 @@ const Loading = styled.p`
 const Fields = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 1.5rem;
-`
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  flex: 1;
-
-  label {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: ${({ theme }) => theme.textMuted};
-  }
-
-  input,
-  select {
-    height: 38px;
-    padding: 0 0.75rem;
-    border: 1px solid ${({ theme }) => theme.inputBorder};
-    border-radius: 8px;
-    background: ${({ theme }) => theme.inputBg};
-    color: ${({ theme }) => theme.text};
-    font-size: 0.875rem;
-    outline: none;
-    transition: border-color 0.15s;
-    width: 100%;
-
-    &:focus {
-      border-color: ${({ theme }) => theme.inputFocus};
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
 `
 
 const TwoCol = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-`
-
-const ErrorMsg = styled.span`
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.danger};
+  gap: 1.5rem;
 `
 
 const ModalFooter = styled.div`

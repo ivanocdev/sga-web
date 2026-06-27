@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 import { useEditarUsuario } from '@/hooks/useUsuarios'
 import { useTranslation } from 'react-i18next'
+import { FloatingInput } from '@/components/atoms/FloatingInput'
 
 interface PasswordForm {
   nueva: string
@@ -119,33 +120,27 @@ export function CardCuenta() {
           </CambiarClaveBtn>
         ) : (
           <PasswordForm onSubmit={handleSubmit(onCambiarContrasena)}>
-            <Field>
-              <Label>{t('configuracion.nueva_contrasena')}</Label>
-              <Input
-                type="password"
-                {...register('nueva', {
-                  required: t('errores.requerido'),
-                  minLength: { value: 8, message: t('errores.contrasena_corta') },
-                })}
-                placeholder="Mínimo 8 caracteres"
-                disabled={isSubmitting}
-              />
-              {errors.nueva && <ErrorMsg>{errors.nueva.message}</ErrorMsg>}
-            </Field>
+            <FloatingInput
+              label={t('configuracion.nueva_contrasena')}
+              type="password"
+              {...register('nueva', {
+                required: t('errores.requerido'),
+                minLength: { value: 8, message: t('errores.contrasena_corta') },
+              })}
+              disabled={isSubmitting}
+              error={errors.nueva?.message}
+            />
 
-            <Field>
-              <Label>{t('configuracion.confirmar_contrasena')}</Label>
-              <Input
-                type="password"
-                {...register('confirmar', {
-                  required: t('errores.requerido'),
-                  validate: v => v === watch('nueva') || t('errores.contrasenas_no_coinciden'),
-                })}
-                placeholder="Repite la contraseña"
-                disabled={isSubmitting}
-              />
-              {errors.confirmar && <ErrorMsg>{errors.confirmar.message}</ErrorMsg>}
-            </Field>
+            <FloatingInput
+              label={t('configuracion.confirmar_contrasena')}
+              type="password"
+              {...register('confirmar', {
+                required: t('errores.requerido'),
+                validate: v => v === watch('nueva') || t('errores.contrasenas_no_coinciden'),
+              })}
+              disabled={isSubmitting}
+              error={errors.confirmar?.message}
+            />
 
             <FormActions>
               <CancelFormBtn
@@ -165,8 +160,6 @@ export function CardCuenta() {
     </Card>
   )
 }
-
-// --- estilos ---
 
 const Card = styled.div`
   background: ${({ theme }) => theme.surface};
@@ -339,51 +332,7 @@ const CambiarClaveBtn = styled.button`
 const PasswordForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
-`
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-`
-
-const Label = styled.label`
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.textMuted};
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-`
-
-const Input = styled.input`
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.inputBorder};
-  background: ${({ theme }) => theme.inputBg};
-  color: ${({ theme }) => theme.text};
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.15s;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.inputFocus};
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.textMuted};
-  }
-
-  &:disabled {
-    opacity: 0.6;
-  }
-`
-
-const ErrorMsg = styled.span`
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.danger};
+  gap: 1.5rem;
 `
 
 const FormActions = styled.div`

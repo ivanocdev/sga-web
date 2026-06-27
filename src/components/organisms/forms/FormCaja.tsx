@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { useInsertarRegistroCaja, useEditarRegistroCaja } from '@/hooks/useCajas'
 import { useRacksLibres } from '@/hooks/useRacks'
 import type { RegistroCaja, RegistroCajaFormValues, TipoRegistro } from '@/types/cajas'
+import { FloatingInput, FloatingSelect } from '@/components/atoms/FloatingInput'
 
 interface Props {
   productoId: number
@@ -75,8 +76,8 @@ export function FormCaja({ productoId, registro, onClose }: Props) {
           <Fields>
             {/* selector de tipo solo en nuevo registro */}
             {!esEdicion && (
-              <Field>
-                <label>{t('cajas.tipo')}</label>
+              <TipoSection>
+                <TipoLabel>{t('cajas.tipo')}</TipoLabel>
                 <TipoSelector>
                   {(['caja', 'suelto', 'piso'] as TipoRegistro[]).map(t_ => (
                     <TipoBtn
@@ -91,57 +92,49 @@ export function FormCaja({ productoId, registro, onClose }: Props) {
                     </TipoBtn>
                   ))}
                 </TipoSelector>
-              </Field>
+              </TipoSection>
             )}
 
-            <Field>
-              <label>{t('cajas.cantidad')} *</label>
-              <input
-                type="number"
-                min="1"
-                {...register('cantidad', { required: t('errores.requerido') })}
-                placeholder="0"
-                disabled={isPending}
-              />
-              {errors.cantidad && <ErrorMsg>{errors.cantidad.message}</ErrorMsg>}
-            </Field>
+            <FloatingInput
+              label={`${t('cajas.cantidad')} *`}
+              type="number"
+              min="1"
+              {...register('cantidad', { required: t('errores.requerido') })}
+              disabled={isPending}
+              error={errors.cantidad?.message}
+            />
 
-            <Field>
-              <label>{t('cajas.fecha_caducidad')}</label>
-              <input
-                type="date"
-                {...register('fecha_caducidad')}
-                disabled={isPending}
-              />
-            </Field>
+            <FloatingInput
+              label={t('cajas.fecha_caducidad')}
+              type="date"
+              {...register('fecha_caducidad')}
+              disabled={isPending}
+            />
 
             {/* rack selector solo para tipo caja */}
             {(tipo === 'caja' || (esEdicion && registro?.tipo === 'caja')) && (
-              <Field>
-                <label>Rack</label>
-                <select {...register('rack_id')} disabled={isPending}>
-                  <option value="">— Sin rack —</option>
-                  {racks.map(r => (
-                    <option key={r.id} value={r.id}>
-                      {r.codigo_rack}
-                      {r.nivel ? ` — Nivel ${r.nivel}` : ''}
-                      {r.lado ? ` L${r.lado}` : ''}
-                      {r.posicion ? ` P${r.posicion}` : ''}
-                    </option>
-                  ))}
-                </select>
-              </Field>
+              <FloatingSelect
+                label="Rack"
+                {...register('rack_id')}
+                disabled={isPending}
+              >
+                <option value="">— Sin rack —</option>
+                {racks.map(r => (
+                  <option key={r.id} value={r.id}>
+                    {r.codigo_rack}
+                    {r.nivel ? ` — Nivel ${r.nivel}` : ''}
+                    {r.lado ? ` L${r.lado}` : ''}
+                    {r.posicion ? ` P${r.posicion}` : ''}
+                  </option>
+                ))}
+              </FloatingSelect>
             )}
 
-            <Field>
-              <label>{t('cajas.codigo_barras')}</label>
-              <input
-                type="text"
-                {...register('codigo_barras')}
-                placeholder="ej. 7501234567890"
-                disabled={isPending}
-              />
-            </Field>
+            <FloatingInput
+              label={t('cajas.codigo_barras')}
+              {...register('codigo_barras')}
+              disabled={isPending}
+            />
           </Fields>
 
           <ModalFooter>
@@ -157,8 +150,6 @@ export function FormCaja({ productoId, registro, onClose }: Props) {
     </Overlay>
   )
 }
-
-// --- estilos ---
 
 const Overlay = styled.div`
   position: fixed;
@@ -213,43 +204,22 @@ const CloseBtn = styled.button`
 const Fields = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 1.5rem;
 `
 
-const Field = styled.div`
+const TipoSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.5rem;
+`
 
-  label {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: ${({ theme }) => theme.textMuted};
-  }
-
-  input,
-  select {
-    height: 38px;
-    padding: 0 0.75rem;
-    border: 1px solid ${({ theme }) => theme.inputBorder};
-    border-radius: 8px;
-    background: ${({ theme }) => theme.inputBg};
-    color: ${({ theme }) => theme.text};
-    font-size: 0.875rem;
-    outline: none;
-    transition: border-color 0.15s;
-    width: 100%;
-
-    &:focus {
-      border-color: ${({ theme }) => theme.inputFocus};
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
+const TipoLabel = styled.span`
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.inputFocus};
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 `
 
 const TipoSelector = styled.div`
@@ -292,11 +262,6 @@ const TipoBtn = styled.button<{ $tipo: TipoRegistro; $activo: boolean }>`
       return theme.danger
     }};
   }
-`
-
-const ErrorMsg = styled.span`
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.danger};
 `
 
 const ModalFooter = styled.div`

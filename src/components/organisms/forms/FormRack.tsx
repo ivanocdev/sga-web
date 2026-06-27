@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { useMarcas } from '@/hooks/useProductos'
 import { useInsertarRack, useEditarRack } from '@/hooks/useRacks'
 import type { Rack, RackFormValues } from '@/types/racks'
+import { FloatingInput, FloatingSelect } from '@/components/atoms/FloatingInput'
 
 interface Props {
   rack?: Rack
@@ -60,63 +61,48 @@ export function FormRack({ rack, onClose }: Props) {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Fields>
-            <Field>
-              <label>{t('racks.codigo')} *</label>
-              <input
-                {...register('codigo_rack', { required: t('errores.requerido') })}
-                placeholder="ej. A-01"
-                disabled={isPending}
-                style={{ textTransform: 'uppercase' }}
-              />
-              {errors.codigo_rack && <ErrorMsg>{errors.codigo_rack.message}</ErrorMsg>}
-            </Field>
+            <FloatingInput
+              label={`${t('racks.codigo')} *`}
+              {...register('codigo_rack', { required: t('errores.requerido') })}
+              disabled={isPending}
+              style={{ textTransform: 'uppercase' }}
+              error={errors.codigo_rack?.message}
+            />
 
             <TwoCol>
-              <Field>
-                <label>{t('racks.nivel')} *</label>
-                <input
-                  {...register('nivel', { required: t('errores.requerido') })}
-                  placeholder="ej. A"
-                  disabled={isPending}
-                />
-                {errors.nivel && <ErrorMsg>{errors.nivel.message}</ErrorMsg>}
-              </Field>
-
-              <Field>
-                <label>{t('racks.lado')}</label>
-                <input
-                  type="number"
-                  min="0"
-                  {...register('lado')}
-                  placeholder="ej. 1"
-                  disabled={isPending}
-                />
-              </Field>
+              <FloatingInput
+                label={`${t('racks.nivel')} *`}
+                {...register('nivel', { required: t('errores.requerido') })}
+                disabled={isPending}
+                error={errors.nivel?.message}
+              />
+              <FloatingInput
+                label={t('racks.lado')}
+                type="number"
+                min="0"
+                {...register('lado')}
+                disabled={isPending}
+              />
             </TwoCol>
 
             <TwoCol>
-              <Field>
-                <label>{t('racks.posicion')}</label>
-                <input
-                  type="number"
-                  min="0"
-                  {...register('posicion')}
-                  placeholder="ej. 1"
-                  disabled={isPending}
-                />
-              </Field>
-
-              <Field>
-                <label>{t('racks.marca')}</label>
-                <select {...register('marca_id')} disabled={isPending}>
-                  <option value="">— {t('racks.marca')} —</option>
-                  {marcas.map(m => (
-                    <option key={m.id} value={m.id}>
-                      {m.nombre}
-                    </option>
-                  ))}
-                </select>
-              </Field>
+              <FloatingInput
+                label={t('racks.posicion')}
+                type="number"
+                min="0"
+                {...register('posicion')}
+                disabled={isPending}
+              />
+              <FloatingSelect
+                label={t('racks.marca')}
+                {...register('marca_id')}
+                disabled={isPending}
+              >
+                <option value="">— {t('racks.marca')} —</option>
+                {marcas.map(m => (
+                  <option key={m.id} value={m.id}>{m.nombre}</option>
+                ))}
+              </FloatingSelect>
             </TwoCol>
           </Fields>
 
@@ -133,8 +119,6 @@ export function FormRack({ rack, onClose }: Props) {
     </Overlay>
   )
 }
-
-// --- estilos (mismo patrón que FormProducto) ---
 
 const Overlay = styled.div`
   position: fixed;
@@ -189,55 +173,14 @@ const CloseBtn = styled.button`
 const Fields = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 1.5rem;
-`
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  flex: 1;
-
-  label {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: ${({ theme }) => theme.textMuted};
-  }
-
-  input,
-  select {
-    height: 38px;
-    padding: 0 0.75rem;
-    border: 1px solid ${({ theme }) => theme.inputBorder};
-    border-radius: 8px;
-    background: ${({ theme }) => theme.inputBg};
-    color: ${({ theme }) => theme.text};
-    font-size: 0.875rem;
-    outline: none;
-    transition: border-color 0.15s;
-    width: 100%;
-
-    &:focus {
-      border-color: ${({ theme }) => theme.inputFocus};
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
 `
 
 const TwoCol = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-`
-
-const ErrorMsg = styled.span`
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.danger};
+  gap: 1.5rem;
 `
 
 const ModalFooter = styled.div`

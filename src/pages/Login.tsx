@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
+import { FloatingInput } from '@/components/atoms/FloatingInput'
 
 export default function Login() {
   const { t } = useTranslation()
@@ -42,29 +43,25 @@ export default function Login() {
         <Title>{t('auth.bienvenido')}</Title>
 
         <Form onSubmit={handleSubmit} noValidate>
-          <Field>
-            <Label htmlFor="correo">{t('auth.correo')}</Label>
-            <Input
-              id="correo"
-              type="email"
-              value={correo}
-              onChange={(e) => setCorreo(e.target.value)}
-              disabled={cargando}
-              autoComplete="email"
-            />
-          </Field>
+          <FloatingInput
+            id="correo"
+            label={t('auth.correo')}
+            type="email"
+            value={correo}
+            onChange={e => setCorreo(e.target.value)}
+            disabled={cargando}
+            autoComplete="email"
+          />
 
-          <Field>
-            <Label htmlFor="contrasena">{t('auth.contrasena')}</Label>
-            <Input
-              id="contrasena"
-              type="password"
-              value={contrasena}
-              onChange={(e) => setContrasena(e.target.value)}
-              disabled={cargando}
-              autoComplete="current-password"
-            />
-          </Field>
+          <FloatingInput
+            id="contrasena"
+            label={t('auth.contrasena')}
+            type="password"
+            value={contrasena}
+            onChange={e => setContrasena(e.target.value)}
+            disabled={cargando}
+            autoComplete="current-password"
+          />
 
           {error && <ErrorMsg role="alert">{error}</ErrorMsg>}
 
@@ -125,40 +122,7 @@ const Form = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-`
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-`
-
-const Label = styled.label`
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: ${({ theme }) => theme.textMuted};
-`
-
-const Input = styled.input`
-  padding: 0.6rem 0.75rem;
-  border: 1px solid ${({ theme }) => theme.inputBorder};
-  border-radius: 6px;
-  font-size: 0.9375rem;
-  background: ${({ theme }) => theme.inputBg};
-  color: ${({ theme }) => theme.text};
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.inputFocus};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.primaryLight};
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  gap: 1.5rem;
 `
 
 const ErrorMsg = styled.p`

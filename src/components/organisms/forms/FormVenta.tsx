@@ -12,6 +12,7 @@ import { parsearPdf } from '@/utils/parsearPdf'
 import { parsearExcel } from '@/utils/parsearExcel'
 import { reglas } from '@/utils/validaciones'
 import type { Venta, VentaFormValues, UploadType, FacturaParseada } from '@/types/ventas'
+import { FloatingInput, FloatingSelect } from '@/components/atoms/FloatingInput'
 
 interface Props {
   ventaEditar?: Venta
@@ -247,52 +248,46 @@ export function FormVenta({ ventaEditar, onClose }: Props) {
             )}
 
             <Fields>
-              <Field>
-                <label>{t('ventas.codigo')} *</label>
-                <input
-                  {...register('codigo', { required: t('errores.requerido'), ...reglas.codigoTexto })}
-                  placeholder="ej. PED-2024-001"
-                  disabled={isPending}
-                />
-                {errors.codigo && <ErrorMsg>{errors.codigo.message}</ErrorMsg>}
-              </Field>
+              <FloatingInput
+                label={`${t('ventas.codigo')} *`}
+                {...register('codigo', { required: t('errores.requerido'), ...reglas.codigoTexto })}
+                disabled={isPending}
+                error={errors.codigo?.message}
+              />
 
-              <Field>
-                <label>{t('ventas.marca')}</label>
-                <select {...register('marca_id')} disabled={isPending}>
-                  <option value="">{t('productos.todas_marcas')}</option>
-                  {marcas.map(m => (
-                    <option key={m.id} value={m.id}>{m.nombre}</option>
-                  ))}
-                </select>
-              </Field>
+              <FloatingSelect
+                label={t('ventas.marca')}
+                {...register('marca_id')}
+                disabled={isPending}
+              >
+                <option value="">{t('productos.todas_marcas')}</option>
+                {marcas.map(m => (
+                  <option key={m.id} value={m.id}>{m.nombre}</option>
+                ))}
+              </FloatingSelect>
 
-              <Field>
-                <label>{t('ventas.fecha')}</label>
-                <input type="date" {...register('fecha')} disabled={isPending} />
-              </Field>
+              <FloatingInput
+                label={t('ventas.fecha')}
+                type="date"
+                {...register('fecha')}
+                disabled={isPending}
+              />
 
               <TwoCol>
-                <Field>
-                  <label>{t('ventas.cantidad_productos')}</label>
-                  <input
-                    type="number"
-                    min="0"
-                    {...register('cantidad_productos')}
-                    placeholder="0"
-                    disabled={isPending}
-                  />
-                </Field>
-                <Field>
-                  <label>{t('ventas.cantidad_total')}</label>
-                  <input
-                    type="number"
-                    min="0"
-                    {...register('cantidad_total')}
-                    placeholder="0"
-                    disabled={isPending}
-                  />
-                </Field>
+                <FloatingInput
+                  label={t('ventas.cantidad_productos')}
+                  type="number"
+                  min="0"
+                  {...register('cantidad_productos')}
+                  disabled={isPending}
+                />
+                <FloatingInput
+                  label={t('ventas.cantidad_total')}
+                  type="number"
+                  min="0"
+                  {...register('cantidad_total')}
+                  disabled={isPending}
+                />
               </TwoCol>
             </Fields>
           </Body>
@@ -310,8 +305,6 @@ export function FormVenta({ ventaEditar, onClose }: Props) {
     </Overlay>
   )
 }
-
-// --- estilos ---
 
 const Overlay = styled.div`
   position: fixed;
@@ -466,46 +459,13 @@ const RemoveBtn = styled.button`
 const Fields = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-`
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  flex: 1;
-
-  label {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: ${({ theme }) => theme.textMuted};
-  }
-
-  input, select {
-    height: 38px;
-    padding: 0 0.75rem;
-    border: 1px solid ${({ theme }) => theme.inputBorder};
-    border-radius: 8px;
-    background: ${({ theme }) => theme.inputBg};
-    color: ${({ theme }) => theme.text};
-    font-size: 0.875rem;
-    outline: none;
-    transition: border-color 0.15s;
-    width: 100%;
-    &:focus { border-color: ${({ theme }) => theme.inputFocus}; }
-    &:disabled { opacity: 0.6; cursor: not-allowed; }
-  }
+  gap: 1.5rem;
 `
 
 const TwoCol = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-`
-
-const ErrorMsg = styled.span`
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.danger};
+  gap: 1.5rem;
 `
 
 const ModalFooter = styled.div`

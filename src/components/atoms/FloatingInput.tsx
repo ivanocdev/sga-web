@@ -8,10 +8,12 @@ interface FloatingInputProps extends React.InputHTMLAttributes<HTMLInputElement>
 }
 
 export function FloatingInput({ label, error, ...inputProps }: FloatingInputProps) {
+  // date/color no usan placeholder — el label siempre va arriba
+  const forceUp = inputProps.type === 'date' || inputProps.type === 'color'
   return (
     <Wrapper>
       <Input placeholder=" " {...inputProps} />
-      <Label>{label}</Label>
+      <Label $alwaysUp={forceUp}>{label}</Label>
       {error && <ErrorMsg>{error}</ErrorMsg>}
     </Wrapper>
   )

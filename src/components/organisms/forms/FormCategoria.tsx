@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { FiX } from 'react-icons/fi'
 import { useInsertarCategoria, useEditarCategoria } from '@/hooks/useCategorias'
 import type { Categoria, CategoriaFormValues } from '@/types/categorias'
+import { FloatingInput } from '@/components/atoms/FloatingInput'
 
 interface Props {
   categoria?: Categoria
@@ -48,24 +49,21 @@ export function FormCategoria({ categoria, onClose }: Props) {
         </ModalHeader>
 
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Field>
-            <Label>Nombre</Label>
-            <Input
-              {...register('nombre', { required: 'El nombre es requerido' })}
-              placeholder="Nombre de la categoría"
-              disabled={isPending}
-              autoFocus
-            />
-            {errors.nombre && <ErrorMsg>{errors.nombre.message}</ErrorMsg>}
-          </Field>
+          <FloatingInput
+            label="Nombre"
+            {...register('nombre', { required: 'El nombre es requerido' })}
+            disabled={isPending}
+            autoFocus
+            error={errors.nombre?.message}
+          />
 
-          <Field>
-            <Label>Color</Label>
+          <ColorField>
+            <ColorLabel>Color</ColorLabel>
             <ColorRow>
               <ColorInput type="color" {...register('color')} disabled={isPending} />
               <ColorHint>Color de identificación (opcional)</ColorHint>
             </ColorRow>
-          </Field>
+          </ColorField>
 
           <Actions>
             <CancelBtn type="button" onClick={onClose} disabled={isPending}>
@@ -80,8 +78,6 @@ export function FormCategoria({ categoria, onClose }: Props) {
     </Overlay>
   )
 }
-
-// --- estilos ---
 
 const Overlay = styled.div`
   position: fixed;
@@ -140,47 +136,22 @@ const CloseBtn = styled.button`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
   padding: 1.5rem;
 `
 
-const Field = styled.div`
+const ColorField = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.375rem;
 `
 
-const Label = styled.label`
-  font-size: 0.8rem;
+const ColorLabel = styled.span`
+  font-size: 0.75rem;
   font-weight: 600;
-  color: ${({ theme }) => theme.textMuted};
+  color: ${({ theme }) => theme.inputFocus};
   text-transform: uppercase;
   letter-spacing: 0.04em;
-`
-
-const Input = styled.input`
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.inputBorder};
-  background: ${({ theme }) => theme.inputBg};
-  color: ${({ theme }) => theme.text};
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.15s;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.inputFocus};
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.textMuted};
-  }
-
-  &:disabled {
-    opacity: 0.6;
-  }
 `
 
 const ColorRow = styled.div`
@@ -208,11 +179,6 @@ const ColorInput = styled.input`
 const ColorHint = styled.span`
   font-size: 0.8rem;
   color: ${({ theme }) => theme.textMuted};
-`
-
-const ErrorMsg = styled.span`
-  font-size: 0.78rem;
-  color: ${({ theme }) => theme.danger};
 `
 
 const Actions = styled.div`
