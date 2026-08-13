@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { bp } from '@/styles/breakpoints'
 import { useDetalleVenta, useEquipoVenta, useAyudantesVenta } from '@/hooks/useVentas'
 import type { Venta } from '@/types/ventas'
+import Button from '@/components/atoms/Button'
 
 interface Props {
   venta: Venta
@@ -122,13 +123,13 @@ export function DetalleVentaModal({ venta, onClose }: Props) {
         </Body>
 
         <ModalFooter>
-          <CancelBtn type="button" onClick={onClose}>
+          <Button variant="secondary" type="button" onClick={onClose}>
             {t('common.cerrar')}
-          </CancelBtn>
-          <DetalleBtn type="button" onClick={irADetalle}>
+          </Button>
+          <Button type="button" onClick={irADetalle}>
             <FiExternalLink size={14} />
             {t('ventas.detalle')}
-          </DetalleBtn>
+          </Button>
         </ModalFooter>
       </Modal>
     </Overlay>
@@ -288,20 +289,4 @@ const ModalFooter = styled.div`
   padding: 1rem 1.5rem;
   border-top: 1px solid ${({ theme }) => theme.border};
   flex-shrink: 0;
-`
-
-const CancelBtn = styled.button`
-  height: 36px; padding: 0 1rem; border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background: transparent; color: ${({ theme }) => theme.textMuted};
-  font-size: 0.875rem; cursor: pointer;
-  &:hover { background: ${({ theme }) => theme.surfaceHover}; }
-`
-
-const DetalleBtn = styled.button`
-  height: 36px; padding: 0 1.25rem; border-radius: 8px; border: none;
-  background: ${({ theme }) => theme.primary};
-  color: #fff; font-size: 0.875rem; font-weight: 500;
-  cursor: pointer; display: flex; align-items: center; gap: 0.375rem;
-  &:hover { background: ${({ theme }) => theme.primaryHover}; }
 `

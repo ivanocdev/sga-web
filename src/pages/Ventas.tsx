@@ -13,6 +13,7 @@ import { useVentasStore } from '@/store/ventasStore'
 import { useAuth } from '@/context/AuthContext'
 import { bp } from '@/styles/breakpoints'
 import type { Venta } from '@/types/ventas'
+import Button from '@/components/atoms/Button'
 
 export default function Ventas() {
   const { t } = useTranslation()
@@ -62,16 +63,16 @@ export default function Ventas() {
           <SearchInput onSearch={handleSearch} placeholder={t('ventas.codigo')} />
 
           {esAdmin && (
-            <DevBtn onClick={() => setDevolucionOpen(true)}>
+            <Button variant="secondary" onClick={() => setDevolucionOpen(true)}>
               <FiRotateCcw size={15} />
-              <span>{t('ventas.devolucion')}</span>
-            </DevBtn>
+              <TextoResponsive>{t('ventas.devolucion')}</TextoResponsive>
+            </Button>
           )}
 
-          <NewBtn onClick={handleNueva}>
+          <Button onClick={handleNueva}>
             <FiPlus size={15} />
             {t('ventas.agregar')}
-          </NewBtn>
+          </Button>
         </Buttons>
       </Header>
 
@@ -139,44 +140,7 @@ const Card = styled.div`
   min-height: 0;
 `
 
-const DevBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  height: 38px;
-  padding: 0 1rem;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background: ${({ theme }) => theme.surface};
-  color: ${({ theme }) => theme.text};
-  font-size: 0.875rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover { background: ${({ theme }) => theme.surfaceHover}; }
-
-  svg { color: ${({ theme }) => theme.warning}; }
-
-  span { display: none; }
-  @media ${bp.md} { span { display: inline; } }
-`
-
-const NewBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  height: 38px;
-  padding: 0 1rem;
-  border-radius: 8px;
-  border: none;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover { background: ${({ theme }) => theme.primaryHover}; }
+const TextoResponsive = styled.span`
+  display: none;
+  @media ${bp.md} { display: inline; }
 `

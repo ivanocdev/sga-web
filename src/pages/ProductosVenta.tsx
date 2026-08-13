@@ -7,6 +7,7 @@ import { bp } from '@/styles/breakpoints'
 import { TablaProductosVenta } from '@/components/organisms/tables/TablaProductosVenta'
 import { FormAsignarEquipo } from '@/components/organisms/forms/FormAsignarEquipo'
 import { useEquipoVenta, useAyudantesVenta } from '@/hooks/useVentas'
+import Button from '@/components/atoms/Button'
 
 export default function ProductosVenta() {
   const { ventaId } = useParams<{ ventaId: string }>()
@@ -38,10 +39,12 @@ export default function ProductosVenta() {
         </TituloBloque>
 
         {!isDevolucion && (
-          <AsignarBtn type="button" onClick={() => setModalEquipo(true)}>
-            <FiUsers size={15} />
-            <span>{t('ventas.asignar_equipo')}</span>
-          </AsignarBtn>
+          <AsignarWrap>
+            <Button variant="secondary" size="sm" type="button" onClick={() => setModalEquipo(true)}>
+              <FiUsers size={15} />
+              <TextoResponsive>{t('ventas.asignar_equipo')}</TextoResponsive>
+            </Button>
+          </AsignarWrap>
         )}
       </Header>
 
@@ -113,28 +116,13 @@ const BackBtn = styled.button`
   }
 `
 
-const AsignarBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
+const AsignarWrap = styled.div`
   margin-left: auto;
-  height: 34px;
-  padding: 0 0.875rem;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background: transparent;
-  color: ${({ theme }) => theme.text};
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: background 0.15s;
+`
 
-  &:hover { background: ${({ theme }) => theme.surfaceHover}; }
-
-  span { display: none; }
-
-  @media ${bp.md} {
-    span { display: inline; }
-  }
+const TextoResponsive = styled.span`
+  display: none;
+  @media ${bp.md} { display: inline; }
 `
 
 const TituloBloque = styled.div`
