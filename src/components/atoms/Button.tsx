@@ -9,25 +9,26 @@ export default function Button({ variant = 'primary', size = 'md', ...props }: B
   return <StyledButton $variant={variant} $size={size} {...props} />
 }
 
+// border-radius en píldora completa (999px) — igual al diseño original
 const sizeStyles = {
   sm: css`
-    padding: 0.4rem 1rem;
+    padding: 0.4rem 1.1rem;
     font-size: 0.8rem;
-    border-radius: 12px;
+    border-radius: 999px;
     border-bottom-width: 4px;
     &:active { border-bottom-width: 2px; }
   `,
   md: css`
-    padding: 0.55rem 1.375rem;
+    padding: 0.55rem 1.5rem;
     font-size: 0.875rem;
-    border-radius: 16px;
+    border-radius: 999px;
     border-bottom-width: 5px;
     &:active { border-bottom-width: 2px; }
   `,
   lg: css`
-    padding: 0.7rem 1.75rem;
+    padding: 0.7rem 1.875rem;
     font-size: 1rem;
-    border-radius: 20px;
+    border-radius: 999px;
     border-bottom-width: 6px;
     &:active { border-bottom-width: 2px; }
   `,
