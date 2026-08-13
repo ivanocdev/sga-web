@@ -11,6 +11,7 @@ import { useAuth } from '@/context/AuthContext'
 import { bp } from '@/styles/breakpoints'
 import Swal from 'sweetalert2'
 import type { Marca } from '@/types/productos'
+import Button from '@/components/atoms/Button'
 
 export default function Configuracion() {
   const { t } = useTranslation()
@@ -56,10 +57,10 @@ export default function Configuracion() {
         <Card>
           <CardHeader>
             <CardTitle>{t('marcas.titulo')}</CardTitle>
-            <AddBtn onClick={() => setFormMarca({ open: true, marca: undefined })}>
+            <Button size="sm" onClick={() => setFormMarca({ open: true, marca: undefined })}>
               <FiPlus size={14} />
               {t('marcas.agregar')}
-            </AddBtn>
+            </Button>
           </CardHeader>
 
           <CardBody>
@@ -172,25 +173,6 @@ const CardTitle = styled.h2`
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-`
-
-const AddBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.35rem 0.75rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-
-  &:hover {
-    background: ${({ theme }) => theme.primaryHover};
-  }
 `
 
 const CardBody = styled.div`

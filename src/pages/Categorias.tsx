@@ -8,6 +8,7 @@ import { useCategorias, useEliminarCategoria } from '@/hooks/useCategorias'
 import { bp } from '@/styles/breakpoints'
 import Swal from 'sweetalert2'
 import type { Categoria } from '@/types/categorias'
+import Button from '@/components/atoms/Button'
 
 export default function Categorias() {
   const { t } = useTranslation()
@@ -57,10 +58,10 @@ export default function Categorias() {
         </TitleRow>
         <Controls>
           <SearchInput onSearch={handleSearch} placeholder={`${t('common.buscar')}...`} />
-          <NuevoBtn onClick={() => setForm({ open: true, categoria: undefined })}>
+          <Button onClick={() => setForm({ open: true, categoria: undefined })}>
             <FiPlus size={15} />
             {t('categorias.agregar')}
-          </NuevoBtn>
+          </Button>
         </Controls>
       </Header>
 
@@ -142,26 +143,6 @@ const Controls = styled.div`
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
-`
-
-const NuevoBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover {
-    background: ${({ theme }) => theme.primaryHover};
-  }
 `
 
 const Content = styled.div`

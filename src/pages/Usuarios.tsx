@@ -9,6 +9,7 @@ import { SearchInput } from '@/components/atoms/SearchInput'
 import { useUsuarios } from '@/hooks/useUsuarios'
 import { bp } from '@/styles/breakpoints'
 import type { Usuario } from '@/types/auth'
+import Button from '@/components/atoms/Button'
 
 export default function Usuarios() {
   const { t } = useTranslation()
@@ -47,10 +48,10 @@ export default function Usuarios() {
         </TitleRow>
         <Controls>
           <SearchInput onSearch={handleSearch} placeholder={`${t('common.buscar')}...`} />
-          <NuevoBtn onClick={() => setFormNuevoOpen(true)}>
+          <Button onClick={() => setFormNuevoOpen(true)}>
             <FiPlus size={15} />
             {t('usuarios.agregar')}
-          </NuevoBtn>
+          </Button>
         </Controls>
       </Header>
 
@@ -106,26 +107,6 @@ const Controls = styled.div`
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
-`
-
-const NuevoBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover {
-    background: ${({ theme }) => theme.primaryHover};
-  }
 `
 
 const Content = styled.div`
