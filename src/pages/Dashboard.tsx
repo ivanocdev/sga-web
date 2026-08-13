@@ -49,10 +49,10 @@ export default function Dashboard() {
       <h1 className="page-title">Dashboard</h1>
 
       <section className="stats">
-        <StatChip label="Pedidos"   value={totalVentas}   loading={loadingVentas} />
-        <StatChip label="Racks"     value={totalRacks}    loading={loadingRacks} />
-        <StatChip label="Entradas"  value={totalCajas}    loading={loadingCajas} />
-        <StatChip label="Productos" value={totalProductos} loading={loadingProductos} />
+        <StatChip label="Pedidos 💰"   value={totalVentas}   loading={loadingVentas} />
+        <StatChip label="Racks 🚚"     value={totalRacks}    loading={loadingRacks} />
+        <StatChip label="Entradas 📦"  value={totalCajas}    loading={loadingCajas} />
+        <StatChip label="Productos 📝" value={totalProductos} loading={loadingProductos} />
       </section>
 
       <section className="charts">
