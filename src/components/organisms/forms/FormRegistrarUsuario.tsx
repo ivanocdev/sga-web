@@ -6,6 +6,7 @@ import { useCrearUsuario } from '@/hooks/useUsuarios'
 import { reglas } from '@/utils/validaciones'
 import type { UsuarioRegistroValues } from '@/types/usuarios'
 import { FloatingInput, FloatingSelect } from '@/components/atoms/FloatingInput'
+import Button from '@/components/atoms/Button'
 
 interface Props {
   onClose: () => void
@@ -70,12 +71,12 @@ export function FormRegistrarUsuario({ onClose }: Props) {
           </FloatingSelect>
 
           <Actions>
-            <CancelBtn type="button" onClick={onClose} disabled={isPending}>
+            <Button variant="secondary" type="button" onClick={onClose} disabled={isPending}>
               {t('common.cancelar')}
-            </CancelBtn>
-            <SubmitBtn type="submit" disabled={isPending}>
+            </Button>
+            <Button type="submit" disabled={isPending}>
               {isPending ? t('common.cargando') : t('common.guardar')}
-            </SubmitBtn>
+            </Button>
           </Actions>
         </Form>
       </Modal>
@@ -154,43 +155,3 @@ const Actions = styled.div`
   padding-top: 0.25rem;
 `
 
-const CancelBtn = styled.button`
-  background: transparent;
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 8px;
-  padding: 0.5rem 1.125rem;
-  font-size: 0.875rem;
-  cursor: pointer;
-  color: ${({ theme }) => theme.textMuted};
-  transition: background 0.15s;
-
-  &:hover:not(:disabled) {
-    background: ${({ theme }) => theme.surfaceHover};
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`
-
-const SubmitBtn = styled.button`
-  background: ${({ theme }) => theme.primary};
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1.25rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  color: #fff;
-  transition: background 0.15s;
-
-  &:hover:not(:disabled) {
-    background: ${({ theme }) => theme.primaryHover};
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-`

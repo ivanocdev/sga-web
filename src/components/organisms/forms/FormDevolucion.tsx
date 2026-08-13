@@ -15,6 +15,7 @@ import { parsearPdf } from '@/utils/parsearPdf'
 import { parsearExcel } from '@/utils/parsearExcel'
 import type { FacturaParseada, UploadType } from '@/types/ventas'
 import { useMarcas } from '@/hooks/useProductos'
+import Button from '@/components/atoms/Button'
 
 interface Props {
   onClose: () => void
@@ -238,16 +239,17 @@ export function FormDevolucion({ onClose }: Props) {
         </Body>
 
         <ModalFooter>
-          <CancelBtn type="button" onClick={onClose} disabled={enviando}>
+          <Button variant="secondary" type="button" onClick={onClose} disabled={enviando}>
             {t('common.cancelar')}
-          </CancelBtn>
-          <SaveBtn
+          </Button>
+          <Button
+            variant="danger"
             type="button"
             onClick={procesarDevolucion}
             disabled={!archivo || !productosCount || parsando || enviando}
           >
             {enviando ? t('common.cargando') : 'Procesar devolución'}
-          </SaveBtn>
+          </Button>
         </ModalFooter>
       </Modal>
     </Overlay>
@@ -405,22 +407,4 @@ const ModalFooter = styled.div`
   gap: 0.75rem;
   padding: 1rem 1.5rem;
   border-top: 1px solid ${({ theme }) => theme.border};
-`
-
-const CancelBtn = styled.button`
-  height: 36px; padding: 0 1rem; border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background: transparent; color: ${({ theme }) => theme.textMuted};
-  font-size: 0.875rem; cursor: pointer; transition: background 0.15s;
-  &:hover:not(:disabled) { background: ${({ theme }) => theme.surfaceHover}; }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
-`
-
-const SaveBtn = styled.button`
-  height: 36px; padding: 0 1.25rem; border-radius: 8px; border: none;
-  background: ${({ theme }) => theme.danger};
-  color: #fff; font-size: 0.875rem; font-weight: 500;
-  cursor: pointer; transition: background 0.15s;
-  &:hover:not(:disabled) { filter: brightness(1.1); }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
 `

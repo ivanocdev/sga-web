@@ -13,6 +13,7 @@ import { parsearExcel } from '@/utils/parsearExcel'
 import { reglas } from '@/utils/validaciones'
 import type { Venta, VentaFormValues, UploadType, FacturaParseada } from '@/types/ventas'
 import { FloatingInput, FloatingSelect } from '@/components/atoms/FloatingInput'
+import Button from '@/components/atoms/Button'
 
 interface Props {
   ventaEditar?: Venta
@@ -293,12 +294,12 @@ export function FormVenta({ ventaEditar, onClose }: Props) {
           </Body>
 
           <ModalFooter>
-            <CancelBtn type="button" onClick={onClose} disabled={isPending}>
+            <Button variant="secondary" type="button" onClick={onClose} disabled={isPending}>
               {t('common.cancelar')}
-            </CancelBtn>
-            <SaveBtn type="submit" disabled={isPending}>
+            </Button>
+            <Button type="submit" disabled={isPending}>
               {isPending ? t('common.cargando') : t('common.guardar')}
-            </SaveBtn>
+            </Button>
           </ModalFooter>
         </form>
       </Modal>
@@ -476,31 +477,3 @@ const ModalFooter = styled.div`
   border-top: 1px solid ${({ theme }) => theme.border};
 `
 
-const CancelBtn = styled.button`
-  height: 36px;
-  padding: 0 1rem;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background: transparent;
-  color: ${({ theme }) => theme.textMuted};
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background 0.15s;
-  &:hover:not(:disabled) { background: ${({ theme }) => theme.surfaceHover}; }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
-`
-
-const SaveBtn = styled.button`
-  height: 36px;
-  padding: 0 1.25rem;
-  border-radius: 8px;
-  border: none;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s;
-  &:hover:not(:disabled) { background: ${({ theme }) => theme.primaryHover}; }
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
-`

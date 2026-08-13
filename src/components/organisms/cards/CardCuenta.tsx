@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useEditarUsuario } from '@/hooks/useUsuarios'
 import { useTranslation } from 'react-i18next'
 import { FloatingInput } from '@/components/atoms/FloatingInput'
+import Button from '@/components/atoms/Button'
 
 interface PasswordForm {
   nueva: string
@@ -143,16 +144,18 @@ export function CardCuenta() {
             />
 
             <FormActions>
-              <CancelFormBtn
+              <Button
+                variant="secondary"
+                size="sm"
                 type="button"
                 onClick={() => { reset(); setCambiandoClave(false) }}
                 disabled={isSubmitting}
               >
                 {t('common.cancelar')}
-              </CancelFormBtn>
-              <SubmitBtn type="submit" disabled={isSubmitting}>
+              </Button>
+              <Button size="sm" type="submit" disabled={isSubmitting}>
                 {isSubmitting ? t('common.cargando') : t('configuracion.actualizar')}
-              </SubmitBtn>
+              </Button>
             </FormActions>
           </PasswordForm>
         )}
@@ -341,43 +344,3 @@ const FormActions = styled.div`
   gap: 0.625rem;
 `
 
-const CancelFormBtn = styled.button`
-  background: transparent;
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 7px;
-  padding: 0.4rem 0.875rem;
-  font-size: 0.825rem;
-  cursor: pointer;
-  color: ${({ theme }) => theme.textMuted};
-  transition: background 0.15s;
-
-  &:hover:not(:disabled) {
-    background: ${({ theme }) => theme.surfaceHover};
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`
-
-const SubmitBtn = styled.button`
-  background: ${({ theme }) => theme.primary};
-  border: none;
-  border-radius: 7px;
-  padding: 0.4rem 1rem;
-  font-size: 0.825rem;
-  font-weight: 600;
-  cursor: pointer;
-  color: #fff;
-  transition: background 0.15s;
-
-  &:hover:not(:disabled) {
-    background: ${({ theme }) => theme.primaryHover};
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-`

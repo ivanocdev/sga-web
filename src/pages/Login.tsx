@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { FloatingInput } from '@/components/atoms/FloatingInput'
+import Button from '@/components/atoms/Button'
 
 export default function Login() {
   const { t } = useTranslation()
@@ -65,7 +66,12 @@ export default function Login() {
 
           {error && <ErrorMsg role="alert">{error}</ErrorMsg>}
 
-          <Button type="submit" disabled={cargando}>
+          <Button
+            type="submit"
+            disabled={cargando}
+            size="lg"
+            style={{ width: '100%', marginTop: '0.25rem' }}
+          >
             {cargando ? t('auth.cargando') : t('auth.iniciarSesion')}
           </Button>
         </Form>
@@ -131,23 +137,3 @@ const ErrorMsg = styled.p`
   margin: 0;
 `
 
-const Button = styled.button`
-  margin-top: 0.25rem;
-  padding: 0.65rem;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  transition: background 0.15s;
-
-  &:hover:not(:disabled) {
-    background: ${({ theme }) => theme.primaryHover};
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-`
