@@ -29,7 +29,9 @@ async function extraerTexto(file: File): Promise<string> {
   return paginas.join('\n')
 }
 
-function detectarFormato(texto: string): FacturaParseada | null {
+// exportada aparte para poder testear la lógica de parseo con texto plano,
+// sin depender de pdfjs-dist ni de un PDF real
+export function detectarFormato(texto: string): FacturaParseada | null {
   if (/Con Alimentos S\.A\. de C\.V\./i.test(texto)) return parseConAlimentos(texto)
   if (/lacost[eé]ña|la coste/i.test(texto)) return parseLaCostena(texto)
   if (/JUMEX/i.test(texto)) return parseJumex(texto)
