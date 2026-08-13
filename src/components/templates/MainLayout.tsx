@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 import { MdMenu } from 'react-icons/md'
 import { useUiStore } from '@/store/uiStore'
-import Sidebar, { SIDEBAR_OFFSET_OPEN, SIDEBAR_OFFSET_CLOSED } from '@/components/organisms/sidebar/Sidebar'
+import Sidebar, { SIDEBAR_OFFSET } from '@/components/organisms/sidebar/Sidebar'
 import SidebarMobile from '@/components/organisms/sidebar/SidebarMobile'
 import ThemeToggle from '@/components/atoms/ThemeToggle'
 import LanguageToggle from '@/components/atoms/LanguageToggle'
@@ -11,7 +11,7 @@ import { bp } from '@/styles/breakpoints'
 const TOPBAR_H = 56
 
 export default function MainLayout() {
-  const { sidebarAbierto, toggleDrawer } = useUiStore()
+  const { toggleDrawer } = useUiStore()
 
   return (
     <Wrapper>
@@ -30,7 +30,7 @@ export default function MainLayout() {
         </TopBarRight>
       </MobileTopBar>
 
-      <Main $open={sidebarAbierto}>
+      <Main>
         <Outlet />
       </Main>
     </Wrapper>
@@ -99,12 +99,11 @@ const TopBarRight = styled.div`
   gap: 0.25rem;
 `
 
-const Main = styled.main<{ $open: boolean }>`
+const Main = styled.main`
   flex: 1;
   min-width: 0;
-  margin-left: ${({ $open }) => ($open ? SIDEBAR_OFFSET_OPEN : SIDEBAR_OFFSET_CLOSED)}px;
+  margin-left: ${SIDEBAR_OFFSET}px;
   padding: 1.5rem;
-  transition: margin-left 0.3s ease;
 
   @media ${bp.maxMd} {
     margin-left: 0;

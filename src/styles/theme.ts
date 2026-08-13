@@ -11,13 +11,19 @@ export interface Theme {
   danger: string
   success: string
   warning: string
-  // sidebar siempre oscuro, independiente del tema
+  // sidebar siempre oscuro, independiente del tema (drawer mobile + topbar)
   sidebar: string
   sidebarHover: string
   sidebarActive: string
   sidebarText: string
   sidebarTextActive: string
   sidebarBorder: string
+  // cápsula flotante del sidebar desktop — sí cambia con el tema, como el original
+  sidebarCapsule: string
+  sidebarCapsuleHover: string
+  sidebarCapsuleText: string
+  sidebarCapsuleTextActive: string
+  sidebarCapsuleBorder: string
   // inputs y formularios
   inputBg: string
   inputBorder: string
@@ -49,6 +55,12 @@ export const lightTheme: Theme = {
   sidebarText: 'rgba(255, 255, 255, 0.65)',
   sidebarTextActive: '#ffffff',
   sidebarBorder: 'rgba(255, 255, 255, 0.12)',
+  // cápsula blanca flotante en light, como en el original
+  sidebarCapsule: '#ffffff',
+  sidebarCapsuleHover: 'rgba(15, 23, 42, 0.06)',
+  sidebarCapsuleText: '#0f172a',
+  sidebarCapsuleTextActive: '#2264E5',
+  sidebarCapsuleBorder: '#eaeaea',
   inputBg: '#ffffff',
   inputBorder: '#9b9b9b',   // color del underline en el original
   inputFocus: '#2264E5',
@@ -77,6 +89,12 @@ export const darkTheme: Theme = {
   sidebarText: '#667085',
   sidebarTextActive: '#ffffff',
   sidebarBorder: 'rgba(255, 255, 255, 0.05)',
+  // cápsula navy oscura en dark, igual al original
+  sidebarCapsule: '#0e161a',
+  sidebarCapsuleHover: 'rgba(255, 255, 255, 0.08)',
+  sidebarCapsuleText: '#8C9298',
+  sidebarCapsuleTextActive: '#2264E5',
+  sidebarCapsuleBorder: 'rgba(255, 255, 255, 0.08)',
   inputBg: 'transparent',
   inputBorder: '#667085',
   inputFocus: '#2264E5',
