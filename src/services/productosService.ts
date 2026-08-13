@@ -22,7 +22,7 @@ const SELECT_LISTA = `
 
 const SELECT_EDITABLE = 'id, codigo, nombre, marca_id, cajas, cantidad'
 
-function calcularTotales(raw: ProductoRaw): Producto {
+export function calcularTotales(raw: ProductoRaw): Producto {
   const cantidad_piso = raw.piso.reduce((t, item) => t + (item.cantidad ?? 0), 0)
   const cantidad_suelto = raw.suelto.reduce((t, item) => t + (item.cantidad ?? 0), 0)
   // tarimas = cajas con stock + registros sueltos (mismo criterio que el sistema anterior)
