@@ -32,13 +32,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // onAuthStateChange dispara INITIAL_SESSION al montar — no necesitamos getSession aparte
+    // ojo: el callback NO debe esperar otras llamadas a Supabase (deadlock conocido del SDK,
+    // el cliente de auth mantiene un lock interno mientras resuelve la sesión). Por eso solo
+    // actualizamos el estado acá y disparamos la carga del usuario en un efecto aparte.
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession)
-      if (newSession) {
-        await cargarUsuario(newSession.user.id)
-      } else {
+      if (!newSession) {
         setUsuario(null)
         setLoading(false)
       }
@@ -46,6 +47,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => subscription.unsubscribe()
   }, [])
+
+  useEffect(() => {
+    if (!session) return
+    void cargarUsuario(session.user.id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user.id])
 
   async function signIn(correo: string, contrasena: string) {
     const { error } = await supabase.auth.signInWithPassword({
