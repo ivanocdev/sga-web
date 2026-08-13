@@ -30,9 +30,8 @@ export interface Theme {
   inputFocus: string
   // sombras
   shadow: string
-  shadowCard: string
   // sombra diagonal del diseño original: izquierda/arriba + derecha/abajo
-  cardShadow: string
+  shadowCard: string
 }
 
 export const lightTheme: Theme = {
@@ -66,7 +65,6 @@ export const lightTheme: Theme = {
   inputFocus: '#2264E5',
   shadow: '0 1px 3px rgba(0,0,0,0.08)',
   shadowCard: '-4px 0px 4px -2px rgba(0,0,0,0.25), 2px 2px 4px 0px rgba(0,0,0,0.25)',
-  cardShadow: '-4px 0px 4px -2px rgba(0,0,0,0.25), 2px 2px 4px 0px rgba(0,0,0,0.25)',
 }
 
 export const darkTheme: Theme = {
@@ -100,5 +98,4 @@ export const darkTheme: Theme = {
   inputFocus: '#2264E5',
   shadow: '0 1px 3px rgba(0,0,0,0.3)',
   shadowCard: '-4px 0px 4px -2px rgba(0,0,0,0.45), 2px 2px 4px 0px rgba(0,0,0,0.45)',
-  cardShadow: '-4px 0px 4px -2px rgba(0,0,0,0.45), 2px 2px 4px 0px rgba(0,0,0,0.45)',
 }
