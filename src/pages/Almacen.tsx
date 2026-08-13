@@ -13,6 +13,7 @@ import { useProductos } from '@/hooks/useProductos'
 import { useProductosStore } from '@/store/productosStore'
 import { bp } from '@/styles/breakpoints'
 import type { Producto } from '@/types/productos'
+import Button from '@/components/atoms/Button'
 
 export default function Almacen() {
   const { t } = useTranslation()
@@ -53,18 +54,18 @@ export default function Almacen() {
         <Buttons>
           <SearchInput onSearch={handleSearch} />
           <FiltroMarcas />
-          <ExportBtn onClick={() => exportarProductosExcel(data)} disabled={!data.length}>
+          <Button variant="secondary" onClick={() => exportarProductosExcel(data)} disabled={!data.length}>
             <FiDownload size={15} />
             Exportar
-          </ExportBtn>
-          <ImportBtn onClick={() => setImportOpen(true)}>
+          </Button>
+          <Button variant="secondary" onClick={() => setImportOpen(true)}>
             <FiUploadCloud size={15} />
             Cargar Excel
-          </ImportBtn>
-          <NewBtn onClick={handleNuevo}>
+          </Button>
+          <Button onClick={handleNuevo}>
             <FiPlus size={15} />
             {t('productos.agregar')}
-          </NewBtn>
+          </Button>
         </Buttons>
       </Header>
 
@@ -131,76 +132,3 @@ const Card = styled.div`
   min-height: 0;
 `
 
-const ExportBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  height: 38px;
-  padding: 0 1rem;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background: ${({ theme }) => theme.surface};
-  color: ${({ theme }) => theme.text};
-  font-size: 0.875rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover:not(:disabled) {
-    background: ${({ theme }) => theme.surfaceHover};
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-
-  svg {
-    color: ${({ theme }) => theme.warning};
-  }
-`
-
-const ImportBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  height: 38px;
-  padding: 0 1rem;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background: ${({ theme }) => theme.surface};
-  color: ${({ theme }) => theme.text};
-  font-size: 0.875rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover {
-    background: ${({ theme }) => theme.surfaceHover};
-  }
-
-  svg {
-    color: ${({ theme }) => theme.success};
-  }
-`
-
-const NewBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  height: 38px;
-  padding: 0 1rem;
-  border-radius: 8px;
-  border: none;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover {
-    background: ${({ theme }) => theme.primaryHover};
-  }
-`

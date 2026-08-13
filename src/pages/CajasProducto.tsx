@@ -12,6 +12,7 @@ import { fetchProductoBasico } from '@/services/productosService'
 import { useAuth } from '@/context/AuthContext'
 import { bp } from '@/styles/breakpoints'
 import type { RegistroCaja } from '@/types/cajas'
+import Button from '@/components/atoms/Button'
 
 export default function CajasProducto() {
   const { t } = useTranslation()
@@ -72,10 +73,10 @@ export default function CajasProducto() {
         </TitleRow>
 
         {esAdmin && (
-          <NewBtn onClick={handleNuevo}>
+          <Button onClick={handleNuevo}>
             <FiPlus size={15} />
             {t('cajas.agregar_entrada')}
-          </NewBtn>
+          </Button>
         )}
       </Header>
 
@@ -151,27 +152,6 @@ const BackBtn = styled.button`
   &:hover {
     background: ${({ theme }) => theme.surfaceHover};
     color: ${({ theme }) => theme.text};
-  }
-`
-
-const NewBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  height: 38px;
-  padding: 0 1rem;
-  border-radius: 8px;
-  border: none;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover {
-    background: ${({ theme }) => theme.primaryHover};
   }
 `
 

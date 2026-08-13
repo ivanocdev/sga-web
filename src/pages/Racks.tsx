@@ -11,6 +11,7 @@ import { useRacksStore } from '@/store/racksStore'
 import { useAuth } from '@/context/AuthContext'
 import { bp } from '@/styles/breakpoints'
 import type { Rack } from '@/types/racks'
+import Button from '@/components/atoms/Button'
 
 export default function Racks() {
   const { t } = useTranslation()
@@ -51,10 +52,10 @@ export default function Racks() {
         <Buttons>
           <SearchInput onSearch={handleSearch} placeholder={`${t('common.buscar')} rack...`} />
           {esAdmin && (
-            <NewBtn onClick={handleNuevo}>
+            <Button onClick={handleNuevo}>
               <FiPlus size={15} />
               {t('racks.nuevo')}
-            </NewBtn>
+            </Button>
           )}
         </Buttons>
       </Header>
@@ -120,25 +121,4 @@ const Card = styled.div`
   overflow: hidden;
   flex: 1;
   min-height: 0;
-`
-
-const NewBtn = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  height: 38px;
-  padding: 0 1rem;
-  border-radius: 8px;
-  border: none;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover {
-    background: ${({ theme }) => theme.primaryHover};
-  }
 `
