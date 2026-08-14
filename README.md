@@ -182,6 +182,19 @@ src/
 - **Sin `console.log` en producción**: solo `console.error` en catches, forzado por ESLint
   (`no-console`).
 
+## Deploy en Vercel
+
+El proyecto es una SPA de Vite — Vercel la detecta automáticamente, no hace falta `vercel.json`.
+
+1. Importá el repo en [vercel.com](https://vercel.com/)
+2. En **Settings → Environment Variables**, agregá las mismas dos variables del `.env` local:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+3. Deploy automático en cada push a `main`
+
+No hace falta ninguna variable adicional — el frontend nunca usa la service role key (eso vive
+solo del lado de la Edge Function, dentro de Supabase).
+
 ## Contribuir
 
 Este es un proyecto de portafolio personal, pero si encontrás un bug o tenés una sugerencia,
