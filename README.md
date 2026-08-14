@@ -181,3 +181,17 @@ src/
   Edge Function de creación de usuarios.
 - **Sin `console.log` en producción**: solo `console.error` en catches, forzado por ESLint
   (`no-console`).
+
+## Contribuir
+
+Este es un proyecto de portafolio personal, pero si encontrás un bug o tenés una sugerencia,
+las issues y pull requests son bienvenidas:
+
+1. Forkeá el repo y creá una rama descriptiva (`fix/nombre-del-bug`, `feat/nombre-de-la-cosa`)
+2. Corré `pnpm lint` y `pnpm test` antes de abrir el PR
+3. Los mensajes de commit siguen [Conventional Commits](https://www.conventionalcommits.org/) en
+   español, en infinitivo: `feat: agregar filtro por categoría`, `fix: corregir cálculo de tarimas`
+
+## Licencia
+
+[MIT](LICENSE) — usá el código como quieras, con o sin atribución.
