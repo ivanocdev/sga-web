@@ -121,3 +121,63 @@ pnpm test:watch   # tests en modo watch
 pnpm build        # build de producción
 pnpm lint         # eslint
 ```
+
+## Arquitectura
+
+### Separación de responsabilidades
+
+```
+Services   → toda la lógica de Supabase (queries y mutations), no tocan estado de React
+Hooks      → TanStack Query envolviendo los services, manejan cache e invalidaciones
+Stores     → Zustand solo para estado de UI (tema, filtros activos, drawer mobile) — nunca datos remotos
+Components → presentación; la lógica de negocio vive en services/hooks, no en componentes
+```
+
+Esta separación es la decisión de arquitectura más importante del proyecto: evita la mezcla de
+fetching y estado global que tenía la versión original, y hace que cada capa se pueda testear por
+separado (ver `tests/unit/productosService.test.ts`, que mockea Supabase para probar los services
+sin pegarle a una base real).
+
+### Estructura de carpetas
+
+```
+src/
+├── components/
+│   ├── atoms/        # Button, FloatingInput, SearchInput, ThemeToggle...
+│   ├── molecules/     # combinaciones simples (FiltroMarcas, CargarProductosExcel...)
+│   ├── organisms/
+│   │   ├── cards/      # cards del dashboard y configuración
+│   │   ├── forms/      # un form por entidad, con react-hook-form
+│   │   ├── sidebar/     # sidebar desktop (cápsula) + drawer mobile
+│   │   └── tables/      # tablas con TanStack Table + vista de cards en mobile
+│   └── templates/      # MainLayout, ProtectedRoute
+├── pages/              # una por ruta, cargadas con React.lazy()
+├── services/           # toda la comunicación con Supabase
+├── hooks/              # TanStack Query hooks que consumen los services
+├── store/              # Zustand — solo estado de UI
+├── context/            # AuthContext
+├── router/              # rutas + guards (ProtectedRoute/PublicRoute/AdminRoute)
+├── utils/               # funciones puras: parsers de PDF/Excel, validaciones, export
+├── types/               # interfaces TypeScript por dominio
+├── i18n/                # es.json / en.json
+└── styles/              # tema claro/oscuro, breakpoints, mixins
+```
+
+### Decisiones técnicas puntuales
+
+- **Sidebar como cápsula flotante, no un panel ancho**: el diseño original (ver capturas) usa un
+  rail angosto solo-íconos. El color de la cápsula sí cambia con el tema (blanco en claro, navy
+  oscuro en dark) — el sidebar mobile (drawer con etiquetas) es intencionalmente distinto, es un
+  patrón responsive estándar, no una inconsistencia.
+- **`calcularTotales` centralizado**: los totales de inventario (`cantidad_piso`, `cantidad_suelto`,
+  `tarimas`, `total`) se calculan en una sola función pura en `productosService.ts`, no en cada
+  componente que los necesita.
+- **Parsers de factura como funciones puras**: `detectarFormato` (PDF) separa la lógica de parseo
+  de texto de la extracción del PDF en sí (que depende de `pdfjs-dist`), así se puede testear con
+  texto plano sin necesitar un PDF real.
+- **RLS + GRANT explícitos por tabla**: cada tabla tiene RLS habilitado y policies por rol
+  (`admin`/`operador`) vía la función `get_mi_rol()` (`SECURITY DEFINER`, evita recursión). El
+  anon key es seguro de exponer en el cliente porque nunca se usa la service role key fuera de la
+  Edge Function de creación de usuarios.
+- **Sin `console.log` en producción**: solo `console.error` en catches, forzado por ESLint
+  (`no-console`).
