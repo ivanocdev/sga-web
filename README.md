@@ -1,73 +1,54 @@
-# React + TypeScript + Vite
+# SGA — Sistema de Gestión de Almacén
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema web de gestión de almacén e inventario: productos, racks, entradas de mercancía y
+seguimiento de pedidos, con dashboard en tiempo real. Proyecto de portafolio — versión
+refactorizada desde cero (TypeScript, arquitectura limpia, tests) de un sistema construido
+originalmente para un cliente real durante una estadía profesional.
 
-Currently, two official plugins are available:
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white)
+![TanStack Query](https://img.shields.io/badge/TanStack%20Query-5-FF4154?logo=reactquery&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-5-black)
+![styled--components](https://img.shields.io/badge/styled--components-6-DB7093?logo=styledcomponents&logoColor=white)
+![Vitest](https://img.shields.io/badge/tested%20with-Vitest-6E9F18?logo=vitest&logoColor=white)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Capturas
 
-## React Compiler
+| Dashboard (claro) | Dashboard (oscuro) |
+|---|---|
+| ![Dashboard claro](docs/screenshots/dashboard-claro.jpg) | ![Dashboard oscuro](docs/screenshots/dashboard-oscuro.jpg) |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Almacén | Racks |
+|---|---|
+| ![Almacén](docs/screenshots/almacen.jpg) | ![Racks](docs/screenshots/racks.jpg) |
 
-## Expanding the ESLint configuration
+## Funcionalidades
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Dashboard** con métricas en tiempo real (Supabase Realtime): ventas por marca, distribución
+  de racks, productos próximos a caducar, pedidos activos, movimientos recientes
+- **Almacén**: CRUD de productos, búsqueda con debounce, filtro por marca, carga masiva y
+  exportación a Excel
+- **Racks y cajas**: control de ocupación por rack, historial de entradas con orden FIFO por
+  fecha de caducidad
+- **Ventas**: registro de pedidos con parser automático de facturas en PDF (4 formatos) y Excel,
+  devoluciones, asignación de equipo por pedido
+- **Usuarios y roles**: `admin` / `operador`, creación de usuarios vía Supabase Edge Function
+- **Configuración**: marcas, categorías, módulos del sidebar, cuenta propia
+- **i18n** español/inglés, tema claro/oscuro, responsive con vista de cards en mobile
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Stack tecnológico
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| Capa | Tecnología |
+|---|---|
+| Build / UI | Vite, React 19, TypeScript |
+| Estado UI | Zustand |
+| Datos remotos | TanStack Query + TanStack Table |
+| Backend | Supabase (Postgres, Auth, Storage, Realtime, Edge Functions) |
+| Estilos | styled-components (temas claro/oscuro) |
+| Formularios | react-hook-form |
+| Gráficas | Recharts |
+| Parseo de archivos | pdfjs-dist, xlsx |
+| i18n | react-i18next |
+| Tests | Vitest + Testing Library |
