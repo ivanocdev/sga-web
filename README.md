@@ -52,3 +52,72 @@ originalmente para un cliente real durante una estadía profesional.
 | Parseo de archivos | pdfjs-dist, xlsx |
 | i18n | react-i18next |
 | Tests | Vitest + Testing Library |
+
+## Instalación y configuración local
+
+### Requisitos
+
+- Node 20+
+- [pnpm](https://pnpm.io/) — este proyecto usa pnpm, no npm ni yarn
+- Una cuenta de [Supabase](https://supabase.com/) (el plan gratuito alcanza de sobra)
+
+### 1. Clonar e instalar dependencias
+
+```bash
+git clone git@github.com:ivanocdev/sga-web.git
+cd sga-web
+pnpm install
+```
+
+### 2. Crear el proyecto en Supabase
+
+1. Creá un proyecto nuevo en [supabase.com](https://supabase.com/)
+2. Andá a **SQL Editor** y corré, en este orden:
+   1. `supabase/schema.sql` — crea todas las tablas, la función `get_mi_rol()` y las relaciones
+   2. Todos los archivos de `supabase/policies/*.sql` (en cualquier orden entre ellos) — habilitan
+      RLS y las políticas de acceso por rol
+3. (Opcional, recomendado) Creá los dos buckets de Storage desde **Storage**:
+   - `facturas` — privado, máx. 10 MB, acepta PDF y Excel
+   - `imagenes` — público, máx. 2 MB, acepta PNG/JPEG/SVG/WebP
+4. (Opcional) Desplegá la Edge Function para crear usuarios:
+   ```bash
+   supabase functions deploy crear-usuario --project-ref <tu-project-ref>
+   ```
+   Sin esto, todo funciona igual excepto crear usuarios nuevos desde Configuración → Usuarios.
+
+### 3. Variables de entorno
+
+```bash
+cp .env.example .env
+```
+
+Completá `.env` con la URL y la anon key de tu proyecto (**Settings → API** en el dashboard de
+Supabase):
+
+```
+VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJ...
+```
+
+### 4. Crear tu primer usuario
+
+1. Corré la app (`pnpm dev`) y andá a `/login`
+2. Registrate desde el dashboard de Supabase en **Authentication → Users → Add user** con tu
+   correo y contraseña
+3. Insertá tu fila correspondiente en `usuarios` (reemplazá el UUID por el que te dio Supabase):
+   ```sql
+   insert into usuarios (id, nombre, correo, rol, activo)
+   values ('<uuid-del-usuario>', 'Tu Nombre', 'tu@correo.com', 'admin', true);
+   ```
+4. (Opcional) Corré `seed.sql` para tener marcas, productos, racks y pedidos de ejemplo — así el
+   dashboard no arranca vacío
+
+### 5. Levantar el proyecto
+
+```bash
+pnpm dev          # servidor de desarrollo
+pnpm test         # correr los tests una vez
+pnpm test:watch   # tests en modo watch
+pnpm build        # build de producción
+pnpm lint         # eslint
+```
