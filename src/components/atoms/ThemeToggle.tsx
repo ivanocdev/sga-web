@@ -34,12 +34,12 @@ const Btn = styled.button`
   border-radius: 8px;
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.sidebarText};
+  color: ${({ theme }) => theme.sidebarCapsuleText};
   transition: background 0.15s, color 0.15s;
 
   &:hover {
-    background: ${({ theme }) => theme.sidebarHover};
-    color: ${({ theme }) => theme.sidebarTextActive};
+    background: ${({ theme }) => theme.sidebarCapsuleHover};
+    color: ${({ theme }) => theme.sidebarCapsuleTextActive};
   }
 `
 

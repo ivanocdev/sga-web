@@ -141,7 +141,7 @@ const Drawer = styled.aside<{ $open: boolean }>`
     height: 100vh;
     width: ${DRAWER_W}px;
     max-width: 85vw;
-    background: ${({ theme }) => theme.sidebar};
+    background: ${({ theme }) => theme.sidebarCapsule};
     z-index: 120;
     transform: translateX(${({ $open }) => ($open ? '0' : '-100%')});
     transition: transform 0.25s ease;
@@ -154,7 +154,7 @@ const DrawerHeader = styled.div`
   justify-content: space-between;
   padding: 1.25rem 1rem;
   min-height: 64px;
-  border-bottom: 1px solid ${({ theme }) => theme.sidebarBorder};
+  border-bottom: 1px solid ${({ theme }) => theme.sidebarCapsuleBorder};
 `
 
 const LogoArea = styled.div`
@@ -179,7 +179,7 @@ const LogoMark = styled.div`
 `
 
 const LogoText = styled.span`
-  color: ${({ theme }) => theme.sidebarTextActive};
+  color: ${({ theme }) => theme.sidebarCapsuleTextActive};
   font-size: 0.9375rem;
   font-weight: 600;
 `
@@ -191,14 +191,14 @@ const CloseBtn = styled.button`
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: ${({ theme }) => theme.sidebarHover};
+  background: ${({ theme }) => theme.sidebarCapsuleHover};
   border: none;
-  color: ${({ theme }) => theme.sidebarText};
+  color: ${({ theme }) => theme.sidebarCapsuleText};
   transition: background 0.15s, color 0.15s;
 
   &:hover {
-    background: ${({ theme }) => theme.sidebarActive};
-    color: ${({ theme }) => theme.sidebarTextActive};
+    background: ${({ theme }) => theme.sidebarCapsuleHover};
+    color: ${({ theme }) => theme.sidebarCapsuleTextActive};
   }
 `
 
@@ -216,25 +216,25 @@ const Item = styled(NavLink)`
   padding: 0.75rem 1.25rem;
   margin: 0.125rem 0.75rem;
   border-radius: 25px;
-  color: ${({ theme }) => theme.sidebarText};
+  color: ${({ theme }) => theme.sidebarCapsuleText};
   font-size: 0.9375rem;
   font-weight: 600;
   text-transform: uppercase;
   transition: background 0.15s, color 0.15s;
 
   &:hover {
-    background: ${({ theme }) => theme.sidebarHover};
-    color: ${({ theme }) => theme.sidebarTextActive};
+    background: ${({ theme }) => theme.sidebarCapsuleHover};
+    color: ${({ theme }) => theme.sidebarCapsuleTextActive};
   }
 
   &.active {
-    background: ${({ theme }) => theme.sidebarActive};
-    color: ${({ theme }) => theme.sidebarTextActive};
+    background: ${({ theme }) => theme.sidebarCapsuleHover};
+    color: ${({ theme }) => theme.sidebarCapsuleTextActive};
   }
 `
 
 const Footer = styled.div`
-  border-top: 1px solid ${({ theme }) => theme.sidebarBorder};
+  border-top: 1px solid ${({ theme }) => theme.sidebarCapsuleBorder};
   padding: 0.875rem 0.5rem;
   display: flex;
   flex-direction: column;
@@ -246,13 +246,13 @@ const UserInfo = styled.div`
 `
 
 const UserName = styled.p`
-  color: ${({ theme }) => theme.sidebarTextActive};
+  color: ${({ theme }) => theme.sidebarCapsuleTextActive};
   font-size: 0.875rem;
   font-weight: 600;
 `
 
 const UserRole = styled.p`
-  color: ${({ theme }) => theme.sidebarText};
+  color: ${({ theme }) => theme.sidebarCapsuleText};
   font-size: 0.75rem;
   text-transform: capitalize;
 `
@@ -266,7 +266,7 @@ const LogoutBtn = styled.button`
   border-radius: 25px;
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.sidebarText};
+  color: ${({ theme }) => theme.sidebarCapsuleText};
   font-size: 0.9375rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -274,7 +274,7 @@ const LogoutBtn = styled.button`
   transition: background 0.15s, color 0.15s;
 
   &:hover {
-    background: ${({ theme }) => theme.sidebarHover};
-    color: ${({ theme }) => theme.sidebarTextActive};
+    background: ${({ theme }) => theme.sidebarCapsuleHover};
+    color: ${({ theme }) => theme.sidebarCapsuleTextActive};
   }
 `

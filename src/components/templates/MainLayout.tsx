@@ -55,8 +55,8 @@ const MobileTopBar = styled.header`
     right: 0;
     height: ${TOPBAR_H}px;
     padding: 0 1rem;
-    background: ${({ theme }) => theme.sidebar};
-    border-bottom: 1px solid ${({ theme }) => theme.sidebarBorder};
+    background: ${({ theme }) => theme.sidebarCapsule};
+    border-bottom: 1px solid ${({ theme }) => theme.sidebarCapsuleBorder};
     z-index: 100;
   }
 `
@@ -70,12 +70,12 @@ const HamburgerBtn = styled.button`
   border-radius: 8px;
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.sidebarText};
+  color: ${({ theme }) => theme.sidebarCapsuleText};
   transition: background 0.15s, color 0.15s;
 
   &:hover {
-    background: ${({ theme }) => theme.sidebarHover};
-    color: ${({ theme }) => theme.sidebarTextActive};
+    background: ${({ theme }) => theme.sidebarCapsuleHover};
+    color: ${({ theme }) => theme.sidebarCapsuleTextActive};
   }
 `
 

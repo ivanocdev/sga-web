@@ -11,14 +11,7 @@ export interface Theme {
   danger: string
   success: string
   warning: string
-  // sidebar siempre oscuro, independiente del tema (drawer mobile + topbar)
-  sidebar: string
-  sidebarHover: string
-  sidebarActive: string
-  sidebarText: string
-  sidebarTextActive: string
-  sidebarBorder: string
-  // cápsula flotante del sidebar desktop — sí cambia con el tema, como el original
+  // cápsula flotante del sidebar (desktop) y topbar/drawer (mobile) — cambia con el tema
   sidebarCapsule: string
   sidebarCapsuleHover: string
   sidebarCapsuleText: string
@@ -47,13 +40,6 @@ export const lightTheme: Theme = {
   danger: '#F54E41',        // colorError del original
   success: '#9046FF',       // colorExito del original — morado, no verde
   warning: '#d97706',
-  // sidebar azul navy en light para que coincida con el color de marca
-  sidebar: '#023E8A',
-  sidebarHover: 'rgba(255, 255, 255, 0.1)',
-  sidebarActive: 'rgba(255, 255, 255, 0.18)',
-  sidebarText: 'rgba(255, 255, 255, 0.65)',
-  sidebarTextActive: '#ffffff',
-  sidebarBorder: 'rgba(255, 255, 255, 0.12)',
   // cápsula blanca flotante en light, como en el original
   sidebarCapsule: '#ffffff',
   sidebarCapsuleHover: 'rgba(15, 23, 42, 0.06)',
@@ -80,13 +66,6 @@ export const darkTheme: Theme = {
   danger: '#F54E41',
   success: '#9046FF',
   warning: '#f59e0b',
-  // ligeramente más oscuro que bg para crear profundidad sutil
-  sidebar: '#0e161a',       // bgtotalFuerte del original
-  sidebarHover: 'rgba(255, 255, 255, 0.06)',
-  sidebarActive: 'rgba(255, 255, 255, 0.1)',
-  sidebarText: '#667085',
-  sidebarTextActive: '#ffffff',
-  sidebarBorder: 'rgba(255, 255, 255, 0.05)',
   // cápsula navy oscura en dark, igual al original
   sidebarCapsule: '#0e161a',
   sidebarCapsuleHover: 'rgba(255, 255, 255, 0.08)',

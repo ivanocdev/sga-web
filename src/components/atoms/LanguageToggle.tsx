@@ -26,7 +26,7 @@ const Pill = styled.div`
   align-items: center;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.sidebarBorder};
+  border: 1px solid ${({ theme }) => theme.sidebarCapsuleBorder};
 `
 
 const Option = styled.button<{ $active: boolean }>`
@@ -36,7 +36,7 @@ const Option = styled.button<{ $active: boolean }>`
   background: ${({ $active, theme }) =>
     $active ? theme.primary : 'transparent'};
   color: ${({ $active, theme }) =>
-    $active ? '#fff' : theme.sidebarText};
+    $active ? '#fff' : theme.sidebarCapsuleText};
   border: none;
   cursor: ${({ $active }) => ($active ? 'default' : 'pointer')};
   transition: background 0.15s, color 0.15s;
@@ -44,8 +44,8 @@ const Option = styled.button<{ $active: boolean }>`
 
   &:hover:not(:disabled) {
     background: ${({ $active, theme }) =>
-      $active ? theme.primary : theme.sidebarHover};
+      $active ? theme.primary : theme.sidebarCapsuleHover};
     color: ${({ $active, theme }) =>
-      $active ? '#fff' : theme.sidebarTextActive};
+      $active ? '#fff' : theme.sidebarCapsuleTextActive};
   }
 `
